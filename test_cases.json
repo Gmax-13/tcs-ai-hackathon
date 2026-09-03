@@ -2,68 +2,99 @@
   "test_cases": [
     {
       "id": "TC-01",
-      "name": "Normal Case — Canteen Food Wastage",
+      "name": "Normal Case: Food Wastage in Canteens",
+      "type": "normal",
       "category": "normal",
-      "problem_statement": "Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering.",
-      "team_context": "4 members, Python backend, HTML/CSS frontend, 90 minutes remaining",
-      "expected_checks": {
-        "problem_summary": true,
-        "user_personas_count_min": 2,
-        "feature_suggestions_count_min": 3,
-        "has_decision_block": true
-      }
+      "description": "Standard hackathon scenario with a specific problem and beginner/intermediate team.",
+      "problem_statement": "Reducing food wastage in college canteens through demand prediction and surplus food redistribution.",
+      "team_context": "4 people, beginner Python + HTML/CSS skills, 90 minutes remaining",
+      "input": {
+        "problem_statement": "Reducing food wastage in college canteens through demand prediction and surplus food redistribution.",
+        "team_context": "4 people, beginner Python + HTML/CSS skills, 90 minutes remaining"
+      },
+      "expected_checks": [
+        "problem_summary is present and clear",
+        "user_personas has at least 2 personas (e.g. Canteen Manager, Student)",
+        "feature_suggestions has at least 3 features with effort levels",
+        "tech_stack_options includes lightweight options (e.g. Flask, HTML/JS)",
+        "decision, reason, and next_action are all present"
+      ]
     },
     {
       "id": "TC-02",
-      "name": "Alternate Case — Smart Campus Parking",
+      "name": "Alternate Case: Smart Campus Parking System",
+      "type": "alternate",
       "category": "alternate",
-      "problem_statement": "Smart parking slot allocation and navigation for campus vehicles during peak hours.",
-      "team_context": "2 members, React and Node.js skills, intermediate level",
-      "expected_checks": {
-        "problem_summary": true,
-        "user_personas_count_min": 2,
-        "feature_suggestions_count_min": 3,
-        "has_decision_block": true
-      }
+      "description": "Domain specific problem with intermediate/advanced tech stack expectations.",
+      "problem_statement": "Real-time smart campus parking space tracking and reservation system to reduce morning congestion.",
+      "team_context": "3 people, intermediate IoT & Python ML skills, 90 minutes remaining",
+      "input": {
+        "problem_statement": "Real-time smart campus parking space tracking and reservation system to reduce morning congestion.",
+        "team_context": "3 people, intermediate IoT & Python ML skills, 90 minutes remaining"
+      },
+      "expected_checks": [
+        "problem_summary captures real-time tracking requirement",
+        "user_personas includes Student Driver & Campus Security",
+        "feature_suggestions highlights low-effort MVP features like mock sensors/API",
+        "tech_stack_options incorporates Python/OpenCV or lightweight IoT simulation",
+        "prototype_priorities focuses on core allocation algorithm"
+      ]
     },
     {
       "id": "TC-03",
-      "name": "Edge Case — Vague Education Idea",
+      "name": "Edge Case: Extremely Vague Input",
+      "type": "edge",
       "category": "edge",
-      "problem_statement": "Make education better using artificial intelligence for students.",
-      "team_context": "3 members, beginner level, Python only",
-      "expected_checks": {
-        "problem_summary": true,
-        "user_personas_count_min": 1,
-        "feature_suggestions_count_min": 3,
-        "has_decision_block": true
-      }
+      "description": "Very short or vague problem statement requiring scope narrowing and clarifying questions.",
+      "problem_statement": "Fix education system.",
+      "team_context": "2 people, beginner frontend developers, 60 minutes remaining",
+      "input": {
+        "problem_statement": "Fix education system.",
+        "team_context": "2 people, beginner frontend developers, 60 minutes remaining"
+      },
+      "expected_checks": [
+        "key_questions actively prompts for scope narrowing",
+        "design_thinking_guidance focuses on narrowing user segment",
+        "feature_suggestions keeps scope tiny (P0 MVP)",
+        "decision advises selecting 1 micro-problem immediately"
+      ]
     },
     {
       "id": "TC-04",
-      "name": "Domain Case — Student Mental Health Tracker",
-      "category": "domain",
-      "problem_statement": "Anonymized mood logging and peer support connector for university students during exam stress.",
-      "team_context": "3 members, Flutter/Mobile & Flask, 2 hours remaining",
-      "expected_checks": {
-        "problem_summary": true,
-        "user_personas_count_min": 2,
-        "feature_suggestions_count_min": 3,
-        "has_decision_block": true
-      }
+      "name": "Alternate Case: Student Mental Health Tracker",
+      "type": "alternate",
+      "category": "alternate",
+      "description": "Sensitive topic requiring empathetic design thinking and strict privacy guardrails.",
+      "problem_statement": "A confidential AI-based mood tracking and peer support network for university students managing stress.",
+      "team_context": "4 people, React + Node.js skills, 90 minutes remaining",
+      "input": {
+        "problem_statement": "A confidential AI-based mood tracking and peer support network for university students managing stress.",
+        "team_context": "4 people, React + Node.js skills, 90 minutes remaining"
+      },
+      "expected_checks": [
+        "user_personas emphasizes privacy & trust needs",
+        "validation_checkpoints includes privacy/ethics check",
+        "demo_prep_tips focuses on storytelling & user journey",
+        "next_action provides clear immediate prototype step"
+      ]
     },
     {
       "id": "TC-05",
-      "name": "Minimal Context Case — E-waste Collection Drive",
-      "category": "minimal",
-      "problem_statement": "Platform to incentivize electronic waste donation on campus with gamified points.",
-      "team_context": "",
-      "expected_checks": {
-        "problem_summary": true,
-        "user_personas_count_min": 1,
-        "feature_suggestions_count_min": 2,
-        "has_decision_block": true
-      }
+      "name": "Edge Case: Highly Complex Technical Scope",
+      "type": "edge",
+      "category": "edge",
+      "description": "Overly ambitious project for a 90-min hackathon needing severe scope reduction.",
+      "problem_statement": "Autonomous multi-city traffic optimization using deep reinforcement learning and live satellite imagery streams.",
+      "team_context": "3 people, non-technical/beginner coders, 90 minutes remaining",
+      "input": {
+        "problem_statement": "Autonomous multi-city traffic optimization using deep reinforcement learning and live satellite imagery streams.",
+        "team_context": "3 people, non-technical/beginner coders, 90 minutes remaining"
+      },
+      "expected_checks": [
+        "decision strongly recommends simplifying to 1 intersection simulation",
+        "prototype_priorities cuts out satellite stream and deep RL for mock dataset",
+        "feature_suggestions lists high effort warnings for complex components"
+      ]
     }
   ]
 }

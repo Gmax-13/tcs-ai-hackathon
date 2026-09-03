@@ -1,7 +1,8 @@
 """
 app.py — Flask Server (Savio)
 
-Single-route backend: POST /api/mentor, GET /api/health, GET /api/test-cases.
+Backend: POST /api/mentor, POST /api/followup, POST /api/validate,
+GET /api/health, GET /api/test-cases.
 Stateless — no database, no auth, no session management.
 """
 
@@ -14,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()  # Load .env before anything reads env vars
 
 from flask import Flask, request, jsonify, send_from_directory
-from mentor_logic import get_mentor_guidance
+from mentor_logic import get_mentor_guidance, get_followup_guidance, validate_problem_statement
 
 # ---------------------------------------------------------------------------
 # App setup
@@ -75,6 +76,7 @@ def mentor():
 
         problem_statement = data.get("problem_statement", "")
         team_context = data.get("team_context", "")
+        phase = data.get("phase", "")  # Feature D: phase-aware guidance
 
         # Input validation
         if not problem_statement or not str(problem_statement).strip():
@@ -87,6 +89,7 @@ def mentor():
         result = get_mentor_guidance(
             problem_statement=str(problem_statement),
             team_context=str(team_context),
+            phase=str(phase),
         )
 
         logger.info("Successfully generated mentor guidance")
@@ -145,6 +148,91 @@ def test_cases():
             "error": "test_cases.json contains invalid JSON",
             "details": str(e),
         }), 500
+
+
+@app.route("/api/followup", methods=["POST", "OPTIONS"])
+def followup():
+    """Follow-up question endpoint (Feature B).
+
+    Request:
+        {
+            "original_guidance": { /* full response from /api/mentor */ },
+            "question": "string, required",
+            "team_context": "string, optional"
+        }
+
+    Response:
+        {
+            "answer": "string",
+            "related_suggestions": ["string"],
+            "next_steps": ["string"],
+            "warning": "string or null"
+        }
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    try:
+        data = request.get_json(force=True, silent=True)
+        if not data:
+            return jsonify({"error": "Invalid request body", "details": "Expected JSON"}), 400
+
+        original_guidance = data.get("original_guidance", {})
+        question = data.get("question", "")
+        team_context = data.get("team_context", "")
+
+        if not question or not str(question).strip():
+            return jsonify({"error": "question is required", "details": "Provide a follow-up question"}), 400
+
+        result = get_followup_guidance(
+            original_guidance=original_guidance,
+            question=str(question),
+            team_context=str(team_context),
+        )
+        return jsonify(result), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e), "details": "Input validation failed"}), 400
+    except Exception as e:
+        logger.exception("Unexpected error in /api/followup")
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
+
+@app.route("/api/validate", methods=["POST", "OPTIONS"])
+def validate():
+    """Problem statement validator endpoint (Feature C).
+
+    Request:
+        { "problem_statement": "string, required" }
+
+    Response:
+        {
+            "score": number,
+            "max_score": 10,
+            "feedback": [{ "category": "string", "score": number, "status": "string", "note": "string" }],
+            "improved_statement": "string or null"
+        }
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    try:
+        data = request.get_json(force=True, silent=True)
+        if not data:
+            return jsonify({"error": "Invalid request body", "details": "Expected JSON"}), 400
+
+        problem_statement = data.get("problem_statement", "")
+        if not problem_statement or not str(problem_statement).strip():
+            return jsonify({"error": "problem_statement is required", "details": "Provide a problem statement to validate"}), 400
+
+        result = validate_problem_statement(str(problem_statement))
+        return jsonify(result), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e), "details": "Input validation failed"}), 400
+    except Exception as e:
+        logger.exception("Unexpected error in /api/validate")
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
 
 # ---------------------------------------------------------------------------
