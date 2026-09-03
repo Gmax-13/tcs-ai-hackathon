@@ -50,7 +50,7 @@
       <form id="mentorForm">
         <div class="form-group">
           <div class="form-label">
-            <label for="problemStatement">Hackathon Problem Statement <span class="req">*</span></label>
+            <label for="problemStatement">Hackathon Problem Statement <span class="form-hint">(Optional if uploading context)</span></label>
             <span class="form-hint" id="charCount">0 / 2000 chars</span>
           </div>
           <textarea 
@@ -59,7 +59,6 @@
             rows="4" 
             maxlength="2000"
             placeholder="e.g. Reducing food wastage in college canteens through demand prediction and surplus food redistribution..."
-            required
           ></textarea>
         </div>
 
@@ -294,7 +293,10 @@
       const fileInput = document.getElementById('contextFile');
       const file = fileInput.files[0];
 
-      if (!statement) return;
+      if (!statement && !file) {
+        alert("Please provide a problem statement or upload a context document.");
+        return;
+      }
 
       if (file && file.size > 2 * 1024 * 1024) {
         alert("File size exceeds 2MB limit.");

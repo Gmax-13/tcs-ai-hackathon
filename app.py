@@ -82,10 +82,10 @@ def mentor():
         file_base64 = data.get("file_base64", "")
 
         # Input validation
-        if not problem_statement or not str(problem_statement).strip():
+        if not problem_statement.strip() and not file_base64:
             return jsonify({
-                "error": "problem_statement is required and cannot be empty",
-                "details": "Provide a hackathon problem statement as a non-empty string",
+                "error": "Input required",
+                "details": "Provide a problem statement or upload a context document",
             }), 400
 
         # Feature: Parse Context from File
