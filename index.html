@@ -88,6 +88,13 @@
           </select>
         </div>
 
+        <div class="form-group">
+          <div class="form-label">
+            <label for="contextFile">📁 Upload Context <span class="form-hint">(PDF or Image, max 2MB)</span></label>
+          </div>
+          <input type="file" id="contextFile" accept=".pdf,image/png,image/jpeg,image/webp" class="file-input" />
+        </div>
+
         <!-- Validator Alert -->
         <div id="validatorAlert" class="validator-alert" style="display: none;"></div>
 
@@ -284,21 +291,32 @@
       e.preventDefault();
       const statement = problemStatement.value.trim();
       const context = teamContext.value.trim();
+      const fileInput = document.getElementById('contextFile');
+      const file = fileInput.files[0];
 
       if (!statement) return;
 
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("File size exceeds 2MB limit.");
+        return;
+      }
+
       setLoading(true);
 
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            problem_statement: statement,
-            team_context: context,
-            phase: hackathonPhase.value
-          })
-        });
+      const sendRequest = async (fileBase64 = "", fileName = "", fileType = "") => {
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              problem_statement: statement,
+              team_context: context,
+              phase: hackathonPhase.value,
+              file_base64: fileBase64,
+              file_name: fileName,
+              file_type: fileType
+            })
+          });
 
         if (!response.ok) {
           throw new Error(`Server returned status ${response.status}`);
@@ -319,7 +337,22 @@
       } finally {
         setLoading(false);
       }
-    });
+    }; // end sendRequest
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        sendRequest(event.target.result, file.name, file.type);
+      };
+      reader.onerror = () => {
+        alert("Error reading file.");
+        setLoading(false);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      sendRequest();
+    }
+  });
 
     // Follow-up Form Submit
     followupForm.addEventListener('submit', async (e) => {

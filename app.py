@@ -77,6 +77,9 @@ def mentor():
         problem_statement = data.get("problem_statement", "")
         team_context = data.get("team_context", "")
         phase = data.get("phase", "")  # Feature D: phase-aware guidance
+        file_name = data.get("file_name", "")
+        file_type = data.get("file_type", "")
+        file_base64 = data.get("file_base64", "")
 
         # Input validation
         if not problem_statement or not str(problem_statement).strip():
@@ -84,6 +87,18 @@ def mentor():
                 "error": "problem_statement is required and cannot be empty",
                 "details": "Provide a hackathon problem statement as a non-empty string",
             }), 400
+
+        # Feature: Parse Context from File
+        if file_base64 and file_name and file_type:
+            try:
+                from document_parser import extract_context_from_file
+                extracted_text = extract_context_from_file(file_name, file_type, file_base64)
+                
+                # Inject extracted text into the problem statement
+                problem_statement = str(problem_statement) + f"\n\n--- EXTRACTED CONTEXT FROM UPLOADED FILE ({file_name}) ---\n{extracted_text}"
+            except Exception as parse_e:
+                logger.error(f"Error parsing document: {parse_e}")
+                # We continue with just the problem statement if parsing fails
 
         # Get mentor guidance (Groq API → fallback)
         result = get_mentor_guidance(
