@@ -4,244 +4,506 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hackathon Mentor AI — Smart Guidance & Decision Engine</title>
+  <meta name="description" content="AI-powered virtual hackathon mentor for student teams. Structured guidance, design thinking, and demo preparation.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Sticky App Navigation Header -->
-  <header class="app-header">
-    <div class="header-container">
-      <div class="brand-logo">
-        <div class="logo-badge">AI</div>
-        <h1>Hackathon Mentor <span>Assistant</span></h1>
-      </div>
-      <div class="header-status">
-        <div class="status-indicator">
-          <span class="dot" id="server-dot"></span>
-          <span id="server-status-text">Checking server...</span>
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="container header-wrapper">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-title">
+          <h1>Hackathon Mentor AI</h1>
+          <span>TCS Tech Day Assistant</span>
         </div>
-        <button id="test-runner-toggle" class="btn btn-secondary" style="font-size: 0.8rem;">
-          🧪 Test Case Suite
-        </button>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <div id="statusBadge" class="status-badge">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking Backend...</span>
+        </div>
+        <button id="btnHealthCheck" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.78rem;">Ping Server</button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Container -->
-  <main class="main-wrapper">
+  <main class="container">
 
-    <!-- Interactive Test Case Suite Drawer (Phase 5 Proof & Smoke Testing) -->
-    <div id="test-suite-card" class="test-runner-card" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="font-family: var(--font-heading); font-size: 1rem; color: var(--accent-cyan);">
-          🧪 Phase 5 Test Suite Runner (Proof of Functionality)
-        </h3>
-        <button id="close-test-suite" class="btn btn-secondary" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">✕ Close</button>
-      </div>
-      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
-        Select any pre-configured test case below to auto-populate the input and run through the pipeline:
-      </p>
-      <div id="test-cases-list" class="test-cases-pills">
-        <!-- Test cases loaded dynamically -->
-      </div>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+      <span class="hero-tag">Design Thinking & Hackathon Advisor</span>
+      <h2>Guide Your Hackathon Solution to Victory</h2>
+      <p>Enter your problem statement and team constraints to receive structured design thinking guidance, user personas, prioritized feature roadmaps, and demo pitch tips.</p>
+    </section>
 
-    <!-- Aaron's Input Form Section -->
-    <section class="card input-section">
-      <div class="section-title-bar">
-        <h2>
-          <span>📝</span> Input Problem Statement & Team Context
-        </h2>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <label style="font-size: 0.8rem; color: var(--text-secondary);" for="stub-toggle">
-            Use Stub JSON Mode:
-          </label>
-          <input type="checkbox" id="stub-toggle" style="cursor: pointer;">
+    <!-- Test Cases Quick Presets Bar -->
+    <section class="presets-section">
+      <div class="section-label">
+        <span>⚡ Quick Fill Test Cases (Aaron's Test Suite)</span>
+      </div>
+      <div id="presetsGrid" class="presets-grid">
+        <!-- Preset buttons injected dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- Input Form Card -->
+    <section class="form-card">
+      <form id="mentorForm">
+        <div class="form-group">
+          <div class="form-label">
+            <label for="problemStatement">Hackathon Problem Statement <span class="req">*</span></label>
+            <span class="form-hint" id="charCount">0 / 2000 chars</span>
+          </div>
+          <textarea 
+            id="problemStatement" 
+            name="problem_statement" 
+            rows="4" 
+            maxlength="2000"
+            placeholder="e.g. Reducing food wastage in college canteens through demand prediction and surplus food redistribution..."
+            required
+          ></textarea>
         </div>
-      </div>
 
-      <form id="mentor-form" onsubmit="return false;">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="problem_statement">Problem Statement <span style="color: var(--accent-rose)">*</span></label>
-            <textarea 
-              id="problem_statement" 
-              name="problem_statement" 
-              rows="3" 
-              placeholder="e.g. Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering..."
-              required
-            ></textarea>
+        <div class="form-group">
+          <div class="form-label">
+            <label for="teamContext">Team Context & Constraints <span class="form-hint">(Optional)</span></label>
           </div>
+          <input 
+            type="text" 
+            id="teamContext" 
+            name="team_context" 
+            placeholder="e.g. 4 people, beginner Python + HTML/CSS, 90 minutes remaining"
+          />
+        </div>
 
-          <div class="form-group">
-            <label for="team_context">Team Context (Skills, Experience, Time Remaining — Optional)</label>
-            <input 
-              type="text" 
-              id="team_context" 
-              name="team_context" 
-              placeholder="e.g. 4 members, Python Flask backend, HTML/CSS frontend, 90 mins remaining..."
-            />
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" id="submit-btn" class="btn btn-primary">
-              🚀 Get Mentor Guidance
-            </button>
-            <button type="button" id="load-stub-direct" class="btn btn-secondary">
-              ⚡ Quick Stub Demo
-            </button>
-          </div>
+        <div class="form-actions">
+          <button type="button" id="btnStubPreview" class="btn btn-secondary">
+            <span>⚡ Stub Preview</span>
+          </button>
+          <button type="button" id="btnClear" class="btn btn-ghost">Clear</button>
+          <button type="submit" id="btnSubmit" class="btn btn-primary">
+            <span class="spinner" id="btnSpinner"></span>
+            <span id="btnText">Get AI Guidance</span>
+          </button>
         </div>
       </form>
     </section>
 
-    <!-- Anurodh's Output View Section Container -->
-    <section id="output-renderer-target">
-      <!-- MentorRenderer injects content here -->
+    <!-- Results Section -->
+    <section id="resultsContainer" class="results-container">
+      <div class="results-header">
+        <h3 class="results-title">🎯 Structured Mentor Output</h3>
+        <div style="display: flex; gap: 8px;">
+          <button id="btnToggleRaw" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">View Raw JSON</button>
+          <button id="btnCopyJSON" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">Copy JSON</button>
+        </div>
+      </div>
+
+      <!-- Hero Decision Banner -->
+      <div class="decision-banner">
+        <div class="tag">Mentor Immediate Recommendation</div>
+        <div class="decision-text" id="outDecision">--</div>
+        <div class="reason-text" id="outReason">--</div>
+        <div class="next-action-box">
+          👉 <strong>Next Action:</strong> <span id="outNextAction">--</span>
+        </div>
+      </div>
+
+      <!-- Output Cards Grid -->
+      <div class="output-grid">
+        
+        <!-- Problem Summary & Key Questions -->
+        <div class="card col-8">
+          <div class="card-title">
+            <span class="icon">📌</span>
+            <span>Problem Summary & Focus</span>
+          </div>
+          <p id="outProblemSummary" style="color: #d1d5db; margin-bottom: 16px;">--</p>
+          <h4 style="font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 8px;">Key Clarifying Questions:</h4>
+          <ul id="outKeyQuestions" class="list-styled"></ul>
+        </div>
+
+        <!-- Tech Stack Options -->
+        <div class="card col-4">
+          <div class="card-title">
+            <span class="icon">🛠️</span>
+            <span>Recommended Tech Stack</span>
+          </div>
+          <ul id="outTechStack" class="list-styled"></ul>
+        </div>
+
+        <!-- User Personas -->
+        <div class="card col-12">
+          <div class="card-title">
+            <span class="icon">👥</span>
+            <span>Target User Personas</span>
+          </div>
+          <div id="outUserPersonas" class="personas-grid"></div>
+        </div>
+
+        <!-- Feature Suggestions -->
+        <div class="card col-8">
+          <div class="card-title">
+            <span class="icon">🚀</span>
+            <span>Suggested MVP Features</span>
+          </div>
+          <div id="outFeatureSuggestions"></div>
+        </div>
+
+        <!-- Prototype Priorities -->
+        <div class="card col-4">
+          <div class="card-title">
+            <span class="icon">⚡</span>
+            <span>Prototype Priorities (90 Min)</span>
+          </div>
+          <ul id="outPrototypePriorities" class="list-styled"></ul>
+        </div>
+
+        <!-- Design Thinking Guidance -->
+        <div class="card col-6">
+          <div class="card-title">
+            <span class="icon">🧠</span>
+            <span>Design Thinking Approach</span>
+          </div>
+          <p id="outDesignThinking" style="white-space: pre-line; color: #d1d5db; font-size: 0.9rem;"></p>
+        </div>
+
+        <!-- Jury Pitch & Demo Prep -->
+        <div class="card col-6">
+          <div class="card-title">
+            <span class="icon">🎤</span>
+            <span>5-Minute Jury Pitch & Validation</span>
+          </div>
+          <h4 style="font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 6px;">Demo Pitch Tips:</h4>
+          <ul id="outDemoPrepTips" class="list-styled" style="margin-bottom: 14px;"></ul>
+          <h4 style="font-size: 0.85rem; color: var(--badge-medium); margin-bottom: 6px;">Validation Checkpoints:</h4>
+          <ul id="outValidationCheckpoints" class="list-styled"></ul>
+        </div>
+
+      </div>
+
+      <!-- Raw JSON View -->
+      <div id="rawJsonCard" class="card raw-json-card">
+        <div class="card-title">
+          <span class="icon">📄</span>
+          <span>Raw JSON Contract Data</span>
+        </div>
+        <pre class="code-block" id="rawJsonCode"></pre>
+      </div>
+
     </section>
 
   </main>
 
-  <!-- External JS Dependencies -->
   <script src="stub_data.js"></script>
   <script src="renderer.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize Anurodh's Output Renderer
-      const renderer = new window.MentorRenderer('output-renderer-target');
+    // --- Application Logic ---
+    const API_URL = '/api/mentor';
+    const HEALTH_URL = '/api/health';
 
-      // 1. Initial Default Render using Stub Data
-      renderer.render(window.STUB_MENTOR_DATA);
+    // Elements
+    const mentorForm = document.getElementById('mentorForm');
+    const problemStatement = document.getElementById('problemStatement');
+    const teamContext = document.getElementById('teamContext');
+    const charCount = document.getElementById('charCount');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
+    const btnStubPreview = document.getElementById('btnStubPreview');
+    const btnClear = document.getElementById('btnClear');
+    const presetsGrid = document.getElementById('presetsGrid');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const statusText = document.getElementById('statusText');
+    const statusBadge = document.getElementById('statusBadge');
+    const btnHealthCheck = document.getElementById('btnHealthCheck');
+    const btnToggleRaw = document.getElementById('btnToggleRaw');
+    const rawJsonCard = document.getElementById('rawJsonCard');
+    const rawJsonCode = document.getElementById('rawJsonCode');
+    const btnCopyJSON = document.getElementById('btnCopyJSON');
 
-      // Check Server Health Endpoint
-      fetch('/api/health')
-        .then(res => res.json())
-        .then(data => {
-          const dot = document.getElementById('server-dot');
-          const text = document.getElementById('server-status-text');
-          if (data && data.status === 'ok') {
-            dot.style.background = '#10b981';
-            text.innerText = `Flask Server Active (${data.mode.toUpperCase()} mode)`;
+    // Hardcoded Stub Response fallback
+    const SAMPLE_STUB_RESPONSE = window.STUB_MENTOR_DATA || {
+      "problem_summary": "Reducing canteen food wastage via demand prediction and surplus food redistribution.",
+      "key_questions": [
+        "How do you currently estimate food preparation quantities each morning?",
+        "What happens to unconsumed food at the end of lunch hours?",
+        "Can students pre-order meals 1 hour in advance?"
+      ],
+      "user_personas": [
+        { "name": "Canteen Chef", "need": "Accurate daily meal count estimates", "pain_point": "Overcooking food due to uncertain student attendance" },
+        { "name": "Budget Student", "need": "Discounted evening meals", "pain_point": "High food costs and limited late-day menu options" }
+      ],
+      "design_thinking_guidance": "1. Empathize: Talk to canteen staff.\n2. Define: Focus only on lunch peak wastage.\n3. Ideate: Simple booking system + surplus alert banner.\n4. Prototype: Interactive order screen demo.",
+      "feature_suggestions": [
+        { "feature": "Pre-order Demand Counter", "why": "Gives chef realistic headcount before cooking", "effort": "low" },
+        { "feature": "Surplus Alert Dashboard", "why": "Notifies students of discounted surplus food at 3 PM", "effort": "low" },
+        { "feature": "AI Wastage Analytics Predictor", "why": "Predicts future wastage based on past weather & day of week", "effort": "medium" }
+      ],
+      "tech_stack_options": ["Flask / Python backend", "HTML5/CSS3 + Vanilla JS UI", "JSON file store for sample data"],
+      "prototype_priorities": [
+        "Build static canteen order form",
+        "Display surplus count badge dynamically",
+        "Demonstrate 1 end-to-end user checkout flow"
+      ],
+      "validation_checkpoints": [
+        "Can a student complete a pre-order in under 30 seconds?",
+        "Does the chef dashboard update in real-time?"
+      ],
+      "demo_prep_tips": [
+        "Start pitch with the raw stat: 30% canteen food wasted daily",
+        "Show live demo of surplus notification triggering",
+        "Highlight low-effort, high-impact implementation strategy"
+      ],
+      "decision": "FOCUS ON PRE-ORDER & SURPLUS ALERT MVP",
+      "reason": "Solves 80% of canteen wastage with zero hardware costs within your 90-minute limit.",
+      "next_action": "Build the student pre-order UI form and mock chef dashboard first."
+    };
+
+    // Load Test Cases from test_cases.json
+    async function loadTestCases() {
+      try {
+        const res = await fetch('test_cases.json');
+        if (!res.ok) throw new Error('Could not load test cases');
+        const data = await res.json();
+        const testCases = data.test_cases || data;
+        renderPresets(testCases);
+      } catch (err) {
+        const fallbackCases = [
+          {
+            name: "Canteen Wastage",
+            type: "normal",
+            input: {
+              problem_statement: "Reducing food wastage in college canteens through demand prediction and surplus food redistribution.",
+              team_context: "4 people, beginner Python + HTML/CSS skills, 90 minutes remaining"
+            }
+          },
+          {
+            name: "Smart Parking",
+            type: "alternate",
+            input: {
+              problem_statement: "Real-time smart campus parking space tracking and reservation system to reduce morning congestion.",
+              team_context: "3 people, intermediate IoT & Python ML skills, 90 minutes remaining"
+            }
+          },
+          {
+            name: "Vague Input",
+            type: "edge",
+            input: {
+              problem_statement: "Fix education system.",
+              team_context: "2 people, beginner frontend developers, 60 minutes remaining"
+            }
           }
-        })
-        .catch(() => {
-          const text = document.getElementById('server-status-text');
-          text.innerText = 'Offline (Stub Renderer Ready)';
-        });
-
-      // Load Test Cases into Drawer
-      fetch('/api/test-cases')
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.test_cases) {
-            renderTestCases(data.test_cases);
-          }
-        })
-        .catch(() => {
-          // Fallback static test case pills if server unavailable
-          renderTestCases([
-            { id: 'TC-01', name: 'Canteen Food Wastage', problem_statement: 'Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering.', team_context: '4 members, Python Flask, 90 min' },
-            { id: 'TC-02', name: 'Smart Campus Parking', problem_statement: 'Smart parking slot allocation and navigation for campus vehicles during peak hours.', team_context: '2 members, React/Node.js' }
-          ]);
-        });
-
-      function renderTestCases(testCases) {
-        const container = document.getElementById('test-cases-list');
-        container.innerHTML = testCases.map(tc => `
-          <button class="test-pill" data-problem="${escapeAttr(tc.problem_statement)}" data-context="${escapeAttr(tc.team_context || '')}">
-            <strong>${tc.id}</strong>: ${tc.name}
-          </button>
-        `).join('');
-
-        document.querySelectorAll('.test-pill').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            document.getElementById('problem_statement').value = btn.dataset.problem;
-            document.getElementById('team_context').value = btn.dataset.context;
-            submitForm();
-          });
-        });
+        ];
+        renderPresets(fallbackCases);
       }
+    }
 
-      function escapeAttr(str) {
-        return (str || '').replace(/"/g, '&quot;');
+    function renderPresets(cases) {
+      presetsGrid.innerHTML = '';
+      cases.forEach(tc => {
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.type = 'button';
+        const type = tc.type || tc.category || 'normal';
+        const statement = tc.problem_statement || (tc.input ? tc.input.problem_statement : '');
+        const context = tc.team_context || (tc.input ? tc.input.team_context : '');
+
+        btn.innerHTML = `<span class="badge-type ${type}">${type}</span> ${tc.name}`;
+        btn.addEventListener('click', () => {
+          problemStatement.value = statement;
+          teamContext.value = context;
+          updateCharCount();
+        });
+        presetsGrid.appendChild(btn);
+      });
+    }
+
+    // Health Check
+    async function checkHealth() {
+      try {
+        statusText.textContent = "Checking...";
+        const res = await fetch(HEALTH_URL);
+        if (res.ok) {
+          const data = await res.json();
+          statusText.textContent = `Backend Ready (${data.mode ? data.mode.toUpperCase() : 'Active'})`;
+          statusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        } else {
+          statusText.textContent = "Backend Offline (Stub Mode)";
+          statusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        }
+      } catch (e) {
+        statusText.textContent = "Backend Offline (Stub Mode)";
+        statusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
       }
+    }
 
-      // Form Submission Handler
-      const submitBtn = document.getElementById('submit-btn');
-      const form = document.getElementById('mentor-form');
+    // Character Counter
+    function updateCharCount() {
+      charCount.textContent = `${problemStatement.value.length} / 2000 chars`;
+    }
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        submitForm();
-      });
+    problemStatement.addEventListener('input', updateCharCount);
 
-      document.getElementById('load-stub-direct').addEventListener('click', () => {
-        renderer.render(window.STUB_MENTOR_DATA);
-      });
+    // Form Clear
+    btnClear.addEventListener('click', () => {
+      problemStatement.value = '';
+      teamContext.value = '';
+      updateCharCount();
+      resultsContainer.style.display = 'none';
+    });
 
-      function submitForm() {
-        const problemStatement = document.getElementById('problem_statement').value.trim();
-        const teamContext = document.getElementById('team_context').value.trim();
-        const forceStub = document.getElementById('stub-toggle').checked;
+    // Stub Preview Click
+    btnStubPreview.addEventListener('click', () => {
+      renderResults(SAMPLE_STUB_RESPONSE);
+    });
 
-        if (!problemStatement) {
-          alert('Please enter a problem statement.');
-          return;
-        }
+    // Form Submit
+    mentorForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statement = problemStatement.value.trim();
+      const context = teamContext.value.trim();
 
-        if (forceStub) {
-          renderer.render(window.STUB_MENTOR_DATA);
-          return;
-        }
+      if (!statement) return;
 
-        submitBtn.disabled = true;
-        submitBtn.innerText = '⏳ Generating Guidance...';
+      setLoading(true);
 
-        fetch('/api/mentor', {
+      try {
+        const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            problem_statement: problemStatement,
-            team_context: teamContext
+            problem_statement: statement,
+            team_context: context
           })
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('API server returned error');
-          return res.json();
-        })
-        .then(data => {
-          renderer.render(data);
-        })
-        .catch(err => {
-          console.warn('API call failed or offline, falling back to stub renderer:', err);
-          renderer.render(window.STUB_MENTOR_DATA);
-        })
-        .finally(() => {
-          submitBtn.disabled = false;
-          submitBtn.innerText = '🚀 Get Mentor Guidance';
         });
+
+        if (!response.ok) {
+          throw new Error(`Server returned status ${response.status}`);
+        }
+
+        const data = await response.json();
+        renderResults(data);
+      } catch (err) {
+        console.warn('API connection failed, using stub response fallback:', err);
+        renderResults(SAMPLE_STUB_RESPONSE);
+      } finally {
+        setLoading(false);
       }
-
-      // Test Suite Drawer Toggle
-      const testToggle = document.getElementById('test-runner-toggle');
-      const testSuite = document.getElementById('test-suite-card');
-      const closeTest = document.getElementById('close-test-suite');
-
-      testToggle.addEventListener('click', () => {
-        testSuite.style.display = testSuite.style.display === 'none' ? 'block' : 'none';
-      });
-
-      closeTest.addEventListener('click', () => {
-        testSuite.style.display = 'none';
-      });
     });
+
+    function setLoading(isLoading) {
+      if (isLoading) {
+        btnSpinner.style.display = 'inline-block';
+        btnText.textContent = 'Analyzing...';
+        btnSubmit.disabled = true;
+      } else {
+        btnSpinner.style.display = 'none';
+        btnText.textContent = 'Get AI Guidance';
+        btnSubmit.disabled = false;
+      }
+    }
+
+    // Render Results Function
+    function renderResults(data) {
+      resultsContainer.style.display = 'block';
+
+      // Decision Hero Banner
+      document.getElementById('outDecision').textContent = data.decision || 'FOCUS ON MVP SCOPE';
+      document.getElementById('outReason').textContent = data.reason || 'Select essential feature set given team constraints.';
+      document.getElementById('outNextAction').textContent = data.next_action || 'Begin prototype implementation.';
+
+      // Summary & Questions
+      document.getElementById('outProblemSummary').textContent = data.problem_summary || '';
+      renderList('outKeyQuestions', data.key_questions);
+
+      // Tech Stack
+      renderList('outTechStack', data.tech_stack_options);
+
+      // Personas
+      const personasGrid = document.getElementById('outUserPersonas');
+      personasGrid.innerHTML = '';
+      (data.user_personas || []).forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'persona-item';
+        div.innerHTML = `
+          <div class="persona-name">👤 ${p.name || 'User Persona'}</div>
+          <div class="persona-detail"><strong>Need:</strong> ${p.need || 'N/A'}</div>
+          <div class="persona-detail"><strong>Pain Point:</strong> ${p.pain_point || 'N/A'}</div>
+        `;
+        personasGrid.appendChild(div);
+      });
+
+      // Feature Suggestions
+      const featuresContainer = document.getElementById('outFeatureSuggestions');
+      featuresContainer.innerHTML = '';
+      (data.feature_suggestions || []).forEach(f => {
+        const effortClass = (f.effort || 'low').toLowerCase();
+        const item = document.createElement('div');
+        item.className = 'feature-item';
+        item.innerHTML = `
+          <div class="feature-info">
+            <h4>${f.feature || 'Feature'}</h4>
+            <p>${f.why || ''}</p>
+          </div>
+          <span class="effort-pill effort-${effortClass}">${f.effort || 'LOW'}</span>
+        `;
+        featuresContainer.appendChild(item);
+      });
+
+      // Prototype Priorities
+      renderList('outPrototypePriorities', data.prototype_priorities);
+
+      // Design Thinking
+      document.getElementById('outDesignThinking').textContent = data.design_thinking_guidance || '';
+
+      // Jury Tips & Validation
+      renderList('outDemoPrepTips', data.demo_prep_tips);
+      renderList('outValidationCheckpoints', data.validation_checkpoints);
+
+      // Raw JSON
+      rawJsonCode.textContent = JSON.stringify(data, null, 2);
+
+      // Scroll to results
+      resultsContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderList(elementId, items) {
+      const el = document.getElementById(elementId);
+      el.innerHTML = '';
+      (items || []).forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        el.appendChild(li);
+      });
+    }
+
+    // Toggle Raw JSON
+    btnToggleRaw.addEventListener('click', () => {
+      const isVisible = rawJsonCard.style.display === 'block';
+      rawJsonCard.style.display = isVisible ? 'none' : 'block';
+      btnToggleRaw.textContent = isVisible ? 'View Raw JSON' : 'Hide Raw JSON';
+    });
+
+    // Copy JSON
+    btnCopyJSON.addEventListener('click', () => {
+      navigator.clipboard.writeText(rawJsonCode.textContent);
+      btnCopyJSON.textContent = 'Copied!';
+      setTimeout(() => { btnCopyJSON.textContent = 'Copy JSON'; }, 2000);
+    });
+
+    // Health check on load
+    btnHealthCheck.addEventListener('click', checkHealth);
+    loadTestCases();
+    checkHealth();
   </script>
 </body>
 </html>
