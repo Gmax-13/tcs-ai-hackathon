@@ -130,6 +130,14 @@ class MentorRenderer {
             <ul class="questions-list">
               ${(data.key_questions || []).map(q => `<li><span class="list-bullet">?</span> ${this.escape(q)}</li>`).join('')}
             </ul>
+
+            <h4 class="sub-heading" style="margin-top: 16px; color: var(--badge-medium);">⚠️ AI Assumptions:</h4>
+            <ul class="questions-list assumptions-list">
+              ${(data.assumptions && data.assumptions.length > 0) ? 
+                data.assumptions.map(a => `<li style="font-size:0.85rem;"><span class="list-bullet" style="color:var(--badge-medium);">!</span> ${this.escape(a)}</li>`).join('') :
+                '<li style="font-size:0.85rem; color:var(--text-dim);">No assumptions explicitly tagged.</li>'
+              }
+            </ul>
           </div>
         </div>
 
@@ -272,6 +280,9 @@ class MentorRenderer {
             <div class="step-num">1</div>
             <h4>PROBLEM</h4>
             <p>${this.escape(data.problem_summary)}</p>
+            ${(data.assumptions && data.assumptions.length > 0) ? 
+              `<div style="margin-top:8px; font-size:0.8rem; border-left: 2px solid var(--badge-medium); padding-left:8px;"><strong>Assumptions:</strong><br/>${data.assumptions.map(a => `• ${this.escape(a)}`).join('<br/>')}</div>` : ''
+            }
           </div>
 
           <div class="jury-step">

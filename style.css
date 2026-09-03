@@ -568,3 +568,52 @@ pre.code-block {
   overflow-x: auto;
   max-height: 400px;
 }
+
+/* Feature C: Validator Alert */
+.validator-alert {
+  background: rgba(30, 41, 59, 0.8);
+  border-left: 4px solid var(--accent-cyan);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  color: var(--text-main);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Feature B: Followup Container */
+.followup-container {
+  margin-top: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  backdrop-filter: blur(12px);
+}
+.followup-chat-area {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+.chat-message {
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+.user-message {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  align-self: flex-end;
+}
+.ai-message {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+}
+.followup-form {
+  display: flex;
+  gap: 12px;
+}
+.followup-form input {
+  flex: 1;
+}

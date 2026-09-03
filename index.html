@@ -84,8 +84,28 @@
           />
         </div>
 
+        <div class="form-group">
+          <div class="form-label">
+            <label for="hackathonPhase">Hackathon Phase</label>
+          </div>
+          <select id="hackathonPhase" name="phase" class="form-select">
+            <option value="">Any (Default)</option>
+            <option value="understand">1. Understand & Empathize</option>
+            <option value="build">2. Build Prototype</option>
+            <option value="test">3. Test & Validate</option>
+            <option value="demo">4. Demo & Pitch Prep</option>
+          </select>
+        </div>
+
+        <!-- Validator Alert -->
+        <div id="validatorAlert" class="validator-alert" style="display: none;"></div>
+
         <div class="form-actions">
-          <button type="button" id="btnStubPreview" class="btn btn-secondary">
+          <button type="button" id="btnValidate" class="btn btn-secondary">
+            <span class="spinner" id="valSpinner"></span>
+            <span>🔍 Validate Scope</span>
+          </button>
+          <button type="button" id="btnStubPreview" class="btn btn-ghost">
             <span>⚡ Stub Preview</span>
           </button>
           <button type="button" id="btnClear" class="btn btn-ghost">Clear</button>
@@ -97,108 +117,22 @@
       </form>
     </section>
 
-    <!-- Results Section -->
+    </section>
+
+    <!-- Results Section (Managed by MentorRenderer) -->
     <section id="resultsContainer" class="results-container">
-      <div class="results-header">
-        <h3 class="results-title">🎯 Structured Mentor Output</h3>
-        <div style="display: flex; gap: 8px;">
-          <button id="btnToggleRaw" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">View Raw JSON</button>
-          <button id="btnCopyJSON" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">Copy JSON</button>
-        </div>
+      <div id="rendererRoot"></div>
+      
+      <!-- Follow-up Chat UI -->
+      <div id="followupContainer" class="followup-container" style="display: none;">
+        <div class="followup-chat-area" id="followupChatArea"></div>
+        <form id="followupForm" class="followup-form">
+          <input type="text" id="followupInput" placeholder="Ask a follow-up question..." required />
+          <button type="submit" id="btnFollowup" class="btn btn-primary" style="padding: 8px 16px;">
+            <span class="spinner" id="followupSpinner"></span> Ask
+          </button>
+        </form>
       </div>
-
-      <!-- Hero Decision Banner -->
-      <div class="decision-banner">
-        <div class="tag">Mentor Immediate Recommendation</div>
-        <div class="decision-text" id="outDecision">--</div>
-        <div class="reason-text" id="outReason">--</div>
-        <div class="next-action-box">
-          👉 <strong>Next Action:</strong> <span id="outNextAction">--</span>
-        </div>
-      </div>
-
-      <!-- Output Cards Grid -->
-      <div class="output-grid">
-        
-        <!-- Problem Summary & Key Questions -->
-        <div class="card col-8">
-          <div class="card-title">
-            <span class="icon">📌</span>
-            <span>Problem Summary & Focus</span>
-          </div>
-          <p id="outProblemSummary" style="color: #d1d5db; margin-bottom: 16px;">--</p>
-          <h4 style="font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 8px;">Key Clarifying Questions:</h4>
-          <ul id="outKeyQuestions" class="list-styled"></ul>
-        </div>
-
-        <!-- Tech Stack Options -->
-        <div class="card col-4">
-          <div class="card-title">
-            <span class="icon">🛠️</span>
-            <span>Recommended Tech Stack</span>
-          </div>
-          <ul id="outTechStack" class="list-styled"></ul>
-        </div>
-
-        <!-- User Personas -->
-        <div class="card col-12">
-          <div class="card-title">
-            <span class="icon">👥</span>
-            <span>Target User Personas</span>
-          </div>
-          <div id="outUserPersonas" class="personas-grid"></div>
-        </div>
-
-        <!-- Feature Suggestions -->
-        <div class="card col-8">
-          <div class="card-title">
-            <span class="icon">🚀</span>
-            <span>Suggested MVP Features</span>
-          </div>
-          <div id="outFeatureSuggestions"></div>
-        </div>
-
-        <!-- Prototype Priorities -->
-        <div class="card col-4">
-          <div class="card-title">
-            <span class="icon">⚡</span>
-            <span>Prototype Priorities (90 Min)</span>
-          </div>
-          <ul id="outPrototypePriorities" class="list-styled"></ul>
-        </div>
-
-        <!-- Design Thinking Guidance -->
-        <div class="card col-6">
-          <div class="card-title">
-            <span class="icon">🧠</span>
-            <span>Design Thinking Approach</span>
-          </div>
-          <p id="outDesignThinking" style="white-space: pre-line; color: #d1d5db; font-size: 0.9rem;"></p>
-        </div>
-
-        <!-- Jury Pitch & Demo Prep -->
-        <div class="card col-6">
-          <div class="card-title">
-            <span class="icon">🎤</span>
-            <span>5-Minute Jury Pitch & Validation</span>
-          </div>
-          <h4 style="font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 6px;">Demo Pitch Tips:</h4>
-          <ul id="outDemoPrepTips" class="list-styled" style="margin-bottom: 14px;"></ul>
-          <h4 style="font-size: 0.85rem; color: var(--badge-medium); margin-bottom: 6px;">Validation Checkpoints:</h4>
-          <ul id="outValidationCheckpoints" class="list-styled"></ul>
-        </div>
-
-      </div>
-
-      <!-- Raw JSON View -->
-      <div id="rawJsonCard" class="card raw-json-card">
-        <div class="card-title">
-          <span class="icon">📄</span>
-          <span>Raw JSON Contract Data</span>
-        </div>
-        <pre class="code-block" id="rawJsonCode"></pre>
-      </div>
-
     </section>
 
   </main>
@@ -214,6 +148,7 @@
     const mentorForm = document.getElementById('mentorForm');
     const problemStatement = document.getElementById('problemStatement');
     const teamContext = document.getElementById('teamContext');
+    const hackathonPhase = document.getElementById('hackathonPhase');
     const charCount = document.getElementById('charCount');
     const btnSubmit = document.getElementById('btnSubmit');
     const btnSpinner = document.getElementById('btnSpinner');
@@ -225,10 +160,24 @@
     const statusText = document.getElementById('statusText');
     const statusBadge = document.getElementById('statusBadge');
     const btnHealthCheck = document.getElementById('btnHealthCheck');
-    const btnToggleRaw = document.getElementById('btnToggleRaw');
-    const rawJsonCard = document.getElementById('rawJsonCard');
-    const rawJsonCode = document.getElementById('rawJsonCode');
-    const btnCopyJSON = document.getElementById('btnCopyJSON');
+    
+    // Feature C: Validator
+    const btnValidate = document.getElementById('btnValidate');
+    const valSpinner = document.getElementById('valSpinner');
+    const validatorAlert = document.getElementById('validatorAlert');
+    
+    // Feature B: Followup
+    const followupContainer = document.getElementById('followupContainer');
+    const followupForm = document.getElementById('followupForm');
+    const followupInput = document.getElementById('followupInput');
+    const followupChatArea = document.getElementById('followupChatArea');
+    const followupSpinner = document.getElementById('followupSpinner');
+    const btnFollowup = document.getElementById('btnFollowup');
+    
+    let currentGuidance = null; // Store for follow-ups
+
+    // Instantiate Anurodh's Renderer
+    const mentorRenderer = new MentorRenderer('rendererRoot');
 
     // Hardcoded Stub Response fallback
     const SAMPLE_STUB_RESPONSE = window.STUB_MENTOR_DATA || {
@@ -357,13 +306,58 @@
     btnClear.addEventListener('click', () => {
       problemStatement.value = '';
       teamContext.value = '';
+      hackathonPhase.value = '';
       updateCharCount();
       resultsContainer.style.display = 'none';
+      validatorAlert.style.display = 'none';
+      followupContainer.style.display = 'none';
+      followupChatArea.innerHTML = '';
+      currentGuidance = null;
+    });
+
+    // Validator Click
+    btnValidate.addEventListener('click', async () => {
+      const statement = problemStatement.value.trim();
+      if (!statement) return;
+      
+      valSpinner.style.display = 'inline-block';
+      btnValidate.disabled = true;
+      validatorAlert.style.display = 'none';
+      
+      try {
+        const response = await fetch('/api/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ problem_statement: statement })
+        });
+        const data = await response.json();
+        
+        // Render Validator Alert
+        let html = `<strong>Scope Score: ${data.score}/10</strong><br/>`;
+        data.feedback.forEach(f => {
+          const color = f.status === 'good' ? '#10b981' : f.status === 'needs_work' ? '#ef4444' : '#f59e0b';
+          html += `<div style="font-size:0.85rem; margin-top:4px;"><span style="color:${color}">●</span> <strong>${f.category}:</strong> ${f.note}</div>`;
+        });
+        if (data.improved_statement) {
+          html += `<div style="margin-top:8px; font-size:0.85rem; background:rgba(255,255,255,0.05); padding:8px; border-radius:4px;"><strong>AI Suggestion:</strong> <i>${data.improved_statement}</i></div>`;
+        }
+        validatorAlert.innerHTML = html;
+        validatorAlert.style.display = 'block';
+      } catch (err) {
+        console.error(err);
+      } finally {
+        valSpinner.style.display = 'none';
+        btnValidate.disabled = false;
+      }
     });
 
     // Stub Preview Click
     btnStubPreview.addEventListener('click', () => {
-      renderResults(SAMPLE_STUB_RESPONSE);
+      resultsContainer.style.display = 'block';
+      currentGuidance = SAMPLE_STUB_RESPONSE;
+      mentorRenderer.render(SAMPLE_STUB_RESPONSE);
+      followupContainer.style.display = 'block';
+      resultsContainer.scrollIntoView({ behavior: 'smooth' });
     });
 
     // Form Submit
@@ -382,7 +376,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             problem_statement: statement,
-            team_context: context
+            team_context: context,
+            phase: hackathonPhase.value
           })
         });
 
@@ -391,12 +386,57 @@
         }
 
         const data = await response.json();
-        renderResults(data);
+        currentGuidance = data;
+        resultsContainer.style.display = 'block';
+        mentorRenderer.render(data);
+        followupContainer.style.display = 'block';
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
       } catch (err) {
         console.warn('API connection failed, using stub response fallback:', err);
-        renderResults(SAMPLE_STUB_RESPONSE);
+        currentGuidance = SAMPLE_STUB_RESPONSE;
+        resultsContainer.style.display = 'block';
+        mentorRenderer.render(SAMPLE_STUB_RESPONSE);
+        followupContainer.style.display = 'block';
       } finally {
         setLoading(false);
+      }
+    });
+
+    // Follow-up Form Submit
+    followupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = followupInput.value.trim();
+      if (!question || !currentGuidance) return;
+      
+      // Add user message
+      followupChatArea.innerHTML += `<div class="chat-message user-message"><strong>You:</strong> ${question}</div>`;
+      followupInput.value = '';
+      followupSpinner.style.display = 'inline-block';
+      btnFollowup.disabled = true;
+      
+      try {
+        const response = await fetch('/api/followup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            original_guidance: currentGuidance,
+            question: question,
+            team_context: teamContext.value
+          })
+        });
+        const data = await response.json();
+        let aiHtml = `<div class="chat-message ai-message"><strong>Mentor:</strong> ${data.answer}`;
+        if (data.next_steps && data.next_steps.length > 0) {
+          aiHtml += `<ul class="list-styled" style="margin-top:8px;">${data.next_steps.map(s => `<li>${s}</li>`).join('')}</ul>`;
+        }
+        aiHtml += `</div>`;
+        followupChatArea.innerHTML += aiHtml;
+      } catch (err) {
+        followupChatArea.innerHTML += `<div class="chat-message ai-message" style="color:#ef4444;">Error connecting to mentor for follow-up.</div>`;
+      } finally {
+        followupSpinner.style.display = 'none';
+        btnFollowup.disabled = false;
+        followupChatArea.scrollTop = followupChatArea.scrollHeight;
       }
     });
 
@@ -411,94 +451,6 @@
         btnSubmit.disabled = false;
       }
     }
-
-    // Render Results Function
-    function renderResults(data) {
-      resultsContainer.style.display = 'block';
-
-      // Decision Hero Banner
-      document.getElementById('outDecision').textContent = data.decision || 'FOCUS ON MVP SCOPE';
-      document.getElementById('outReason').textContent = data.reason || 'Select essential feature set given team constraints.';
-      document.getElementById('outNextAction').textContent = data.next_action || 'Begin prototype implementation.';
-
-      // Summary & Questions
-      document.getElementById('outProblemSummary').textContent = data.problem_summary || '';
-      renderList('outKeyQuestions', data.key_questions);
-
-      // Tech Stack
-      renderList('outTechStack', data.tech_stack_options);
-
-      // Personas
-      const personasGrid = document.getElementById('outUserPersonas');
-      personasGrid.innerHTML = '';
-      (data.user_personas || []).forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'persona-item';
-        div.innerHTML = `
-          <div class="persona-name">👤 ${p.name || 'User Persona'}</div>
-          <div class="persona-detail"><strong>Need:</strong> ${p.need || 'N/A'}</div>
-          <div class="persona-detail"><strong>Pain Point:</strong> ${p.pain_point || 'N/A'}</div>
-        `;
-        personasGrid.appendChild(div);
-      });
-
-      // Feature Suggestions
-      const featuresContainer = document.getElementById('outFeatureSuggestions');
-      featuresContainer.innerHTML = '';
-      (data.feature_suggestions || []).forEach(f => {
-        const effortClass = (f.effort || 'low').toLowerCase();
-        const item = document.createElement('div');
-        item.className = 'feature-item';
-        item.innerHTML = `
-          <div class="feature-info">
-            <h4>${f.feature || 'Feature'}</h4>
-            <p>${f.why || ''}</p>
-          </div>
-          <span class="effort-pill effort-${effortClass}">${f.effort || 'LOW'}</span>
-        `;
-        featuresContainer.appendChild(item);
-      });
-
-      // Prototype Priorities
-      renderList('outPrototypePriorities', data.prototype_priorities);
-
-      // Design Thinking
-      document.getElementById('outDesignThinking').textContent = data.design_thinking_guidance || '';
-
-      // Jury Tips & Validation
-      renderList('outDemoPrepTips', data.demo_prep_tips);
-      renderList('outValidationCheckpoints', data.validation_checkpoints);
-
-      // Raw JSON
-      rawJsonCode.textContent = JSON.stringify(data, null, 2);
-
-      // Scroll to results
-      resultsContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function renderList(elementId, items) {
-      const el = document.getElementById(elementId);
-      el.innerHTML = '';
-      (items || []).forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        el.appendChild(li);
-      });
-    }
-
-    // Toggle Raw JSON
-    btnToggleRaw.addEventListener('click', () => {
-      const isVisible = rawJsonCard.style.display === 'block';
-      rawJsonCard.style.display = isVisible ? 'none' : 'block';
-      btnToggleRaw.textContent = isVisible ? 'View Raw JSON' : 'Hide Raw JSON';
-    });
-
-    // Copy JSON
-    btnCopyJSON.addEventListener('click', () => {
-      navigator.clipboard.writeText(rawJsonCode.textContent);
-      btnCopyJSON.textContent = 'Copied!';
-      setTimeout(() => { btnCopyJSON.textContent = 'Copy JSON'; }, 2000);
-    });
 
     // Health check on load
     btnHealthCheck.addEventListener('click', checkHealth);
