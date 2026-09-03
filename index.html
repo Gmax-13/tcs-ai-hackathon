@@ -254,36 +254,71 @@
     // Validator Click
     btnValidate.addEventListener('click', async () => {
       const statement = problemStatement.value.trim();
-      if (!statement) return;
+      const fileInput = document.getElementById('contextFile');
+      const file = fileInput.files[0];
+
+      if (!statement && !file) {
+        alert("Please provide a problem statement or upload a context document to validate.");
+        return;
+      }
       
       valSpinner.style.display = 'inline-block';
       btnValidate.disabled = true;
       validatorAlert.style.display = 'none';
       
-      try {
-        const response = await fetch('/api/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ problem_statement: statement })
-        });
-        const data = await response.json();
-        
-        // Render Validator Alert
-        let html = `<strong>Scope Score: ${data.score}/10</strong><br/>`;
-        data.feedback.forEach(f => {
-          const color = f.status === 'good' ? '#10b981' : f.status === 'needs_work' ? '#ef4444' : '#f59e0b';
-          html += `<div style="font-size:0.85rem; margin-top:4px;"><span style="color:${color}">●</span> <strong>${f.category}:</strong> ${f.note}</div>`;
-        });
-        if (data.improved_statement) {
-          html += `<div style="margin-top:8px; font-size:0.85rem; background:rgba(255,255,255,0.05); padding:8px; border-radius:4px;"><strong>AI Suggestion:</strong> <i>${data.improved_statement}</i></div>`;
+      const sendValidateRequest = async (fileBase64 = "", fileName = "", fileType = "") => {
+        try {
+          const response = await fetch('/api/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              problem_statement: statement,
+              file_base64: fileBase64,
+              file_name: fileName,
+              file_type: fileType
+            })
+          });
+          const data = await response.json();
+          
+          // Render Validator Alert
+          let html = `<strong>Scope Score: ${data.score}/10</strong><br/>`;
+          if (data.feedback) {
+            data.feedback.forEach(f => {
+              const color = f.status === 'good' ? '#10b981' : f.status === 'needs_work' ? '#ef4444' : '#f59e0b';
+              html += `<div style="font-size:0.85rem; margin-top:4px;"><span style="color:${color}">●</span> <strong>${f.category}:</strong> ${f.note}</div>`;
+            });
+          }
+          if (data.improved_statement) {
+            html += `<div style="margin-top:8px; font-size:0.85rem; background:rgba(255,255,255,0.05); padding:8px; border-radius:4px;"><strong>AI Suggestion:</strong> <i>${data.improved_statement}</i></div>`;
+          }
+          validatorAlert.innerHTML = html;
+          validatorAlert.style.display = 'block';
+        } catch (err) {
+          console.error(err);
+          alert("Failed to validate problem statement.");
+        } finally {
+          valSpinner.style.display = 'none';
+          btnValidate.disabled = false;
         }
-        validatorAlert.innerHTML = html;
-        validatorAlert.style.display = 'block';
-      } catch (err) {
-        console.error(err);
-      } finally {
-        valSpinner.style.display = 'none';
-        btnValidate.disabled = false;
+      };
+
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          alert("File size exceeds 2MB limit.");
+          valSpinner.style.display = 'none';
+          btnValidate.disabled = false;
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => sendValidateRequest(event.target.result, file.name, file.type);
+        reader.onerror = () => {
+          alert("Error reading file.");
+          valSpinner.style.display = 'none';
+          btnValidate.disabled = false;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        sendValidateRequest();
       }
     });
 

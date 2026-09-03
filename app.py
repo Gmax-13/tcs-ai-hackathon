@@ -237,8 +237,21 @@ def validate():
             return jsonify({"error": "Invalid request body", "details": "Expected JSON"}), 400
 
         problem_statement = data.get("problem_statement", "")
-        if not problem_statement or not str(problem_statement).strip():
-            return jsonify({"error": "problem_statement is required", "details": "Provide a problem statement to validate"}), 400
+        file_name = data.get("file_name", "")
+        file_type = data.get("file_type", "")
+        file_base64 = data.get("file_base64", "")
+
+        if not problem_statement.strip() and not file_base64:
+            return jsonify({"error": "Input required", "details": "Provide a problem statement or upload a context document to validate"}), 400
+
+        # Feature: Parse Context from File
+        if file_base64 and file_name and file_type:
+            try:
+                from document_parser import extract_context_from_file
+                extracted_text = extract_context_from_file(file_name, file_type, file_base64)
+                problem_statement = str(problem_statement) + f"\n\n--- EXTRACTED CONTEXT FROM UPLOADED FILE ({file_name}) ---\n{extracted_text}"
+            except Exception as parse_e:
+                logger.error(f"Error parsing document for validation: {parse_e}")
 
         result = validate_problem_statement(str(problem_statement))
         return jsonify(result), 200
