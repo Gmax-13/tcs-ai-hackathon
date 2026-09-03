@@ -1,0 +1,69 @@
+{
+  "test_cases": [
+    {
+      "id": "TC-01",
+      "name": "Normal Case — Canteen Food Wastage",
+      "category": "normal",
+      "problem_statement": "Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering.",
+      "team_context": "4 members, Python backend, HTML/CSS frontend, 90 minutes remaining",
+      "expected_checks": {
+        "problem_summary": true,
+        "user_personas_count_min": 2,
+        "feature_suggestions_count_min": 3,
+        "has_decision_block": true
+      }
+    },
+    {
+      "id": "TC-02",
+      "name": "Alternate Case — Smart Campus Parking",
+      "category": "alternate",
+      "problem_statement": "Smart parking slot allocation and navigation for campus vehicles during peak hours.",
+      "team_context": "2 members, React and Node.js skills, intermediate level",
+      "expected_checks": {
+        "problem_summary": true,
+        "user_personas_count_min": 2,
+        "feature_suggestions_count_min": 3,
+        "has_decision_block": true
+      }
+    },
+    {
+      "id": "TC-03",
+      "name": "Edge Case — Vague Education Idea",
+      "category": "edge",
+      "problem_statement": "Make education better using artificial intelligence for students.",
+      "team_context": "3 members, beginner level, Python only",
+      "expected_checks": {
+        "problem_summary": true,
+        "user_personas_count_min": 1,
+        "feature_suggestions_count_min": 3,
+        "has_decision_block": true
+      }
+    },
+    {
+      "id": "TC-04",
+      "name": "Domain Case — Student Mental Health Tracker",
+      "category": "domain",
+      "problem_statement": "Anonymized mood logging and peer support connector for university students during exam stress.",
+      "team_context": "3 members, Flutter/Mobile & Flask, 2 hours remaining",
+      "expected_checks": {
+        "problem_summary": true,
+        "user_personas_count_min": 2,
+        "feature_suggestions_count_min": 3,
+        "has_decision_block": true
+      }
+    },
+    {
+      "id": "TC-05",
+      "name": "Minimal Context Case — E-waste Collection Drive",
+      "category": "minimal",
+      "problem_statement": "Platform to incentivize electronic waste donation on campus with gamified points.",
+      "team_context": "",
+      "expected_checks": {
+        "problem_summary": true,
+        "user_personas_count_min": 1,
+        "feature_suggestions_count_min": 2,
+        "has_decision_block": true
+      }
+    }
+  ]
+}
