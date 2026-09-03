@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hackathon Mentor AI Assistant</title>
+  <title>Hackathon Mentor AI — Smart Guidance & Decision Engine</title>
   <meta name="description" content="AI-powered virtual hackathon mentor for student teams. Structured guidance, design thinking, and demo preparation.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -197,6 +203,8 @@
 
   </main>
 
+  <script src="stub_data.js"></script>
+  <script src="renderer.js"></script>
   <script>
     // --- Application Logic ---
     const API_URL = '/api/mentor';
@@ -222,8 +230,8 @@
     const rawJsonCode = document.getElementById('rawJsonCode');
     const btnCopyJSON = document.getElementById('btnCopyJSON');
 
-    // Hardcoded Stub Response for Phase 3 testing / offline fallback
-    const SAMPLE_STUB_RESPONSE = {
+    // Hardcoded Stub Response fallback
+    const SAMPLE_STUB_RESPONSE = window.STUB_MENTOR_DATA || {
       "problem_summary": "Reducing canteen food wastage via demand prediction and surplus food redistribution.",
       "key_questions": [
         "How do you currently estimate food preparation quantities each morning?",
@@ -265,10 +273,10 @@
       try {
         const res = await fetch('test_cases.json');
         if (!res.ok) throw new Error('Could not load test cases');
-        const testCases = await res.json();
+        const data = await res.json();
+        const testCases = data.test_cases || data;
         renderPresets(testCases);
       } catch (err) {
-        // Fallback default test cases if fetch fails
         const fallbackCases = [
           {
             name: "Canteen Wastage",
@@ -305,10 +313,14 @@
         const btn = document.createElement('button');
         btn.className = 'preset-btn';
         btn.type = 'button';
-        btn.innerHTML = `<span class="badge-type ${tc.type}">${tc.type}</span> ${tc.name}`;
+        const type = tc.type || tc.category || 'normal';
+        const statement = tc.problem_statement || (tc.input ? tc.input.problem_statement : '');
+        const context = tc.team_context || (tc.input ? tc.input.team_context : '');
+
+        btn.innerHTML = `<span class="badge-type ${type}">${type}</span> ${tc.name}`;
         btn.addEventListener('click', () => {
-          problemStatement.value = tc.input.problem_statement;
-          teamContext.value = tc.input.team_context || '';
+          problemStatement.value = statement;
+          teamContext.value = context;
           updateCharCount();
         });
         presetsGrid.appendChild(btn);
@@ -322,7 +334,7 @@
         const res = await fetch(HEALTH_URL);
         if (res.ok) {
           const data = await res.json();
-          statusText.textContent = `Backend Ready (${data.mode || 'Active'})`;
+          statusText.textContent = `Backend Ready (${data.mode ? data.mode.toUpperCase() : 'Active'})`;
           statusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
         } else {
           statusText.textContent = "Backend Offline (Stub Mode)";

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   --bg-dark: #090d16;
@@ -13,8 +13,10 @@
   
   --accent-cyan: #06b6d4;
   --accent-purple: #8b5cf6;
+  --accent-rose: #f43f5e;
   
   --text-main: #f3f4f6;
+  --text-secondary: #9ca3af;
   --text-muted: #9ca3af;
   --text-dim: #6b7280;
   
@@ -26,6 +28,7 @@
   --radius-md: 14px;
   --radius-lg: 20px;
   
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.15);
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -48,16 +51,16 @@ body {
   padding-bottom: 60px;
 }
 
-.container {
+.container, .main-wrapper, .header-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
 /* --- Header --- */
-header {
+header, .app-header {
   border-bottom: 1px solid var(--border-color);
-  background: rgba(9, 13, 22, 0.8);
+  background: rgba(9, 13, 22, 0.85);
   backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
@@ -65,19 +68,19 @@ header {
   padding: 16px 0;
 }
 
-.header-wrapper {
+.header-wrapper, .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.brand {
+.brand, .brand-logo {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-.brand-icon {
+.brand-icon, .logo-badge {
   width: 44px;
   height: 44px;
   background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
@@ -86,10 +89,12 @@ header {
   align-items: center;
   justify-content: center;
   font-size: 22px;
+  font-weight: 800;
   box-shadow: var(--shadow-glow);
 }
 
-.brand-title h1 {
+.brand-title h1, .brand-logo h1 {
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -98,13 +103,13 @@ header {
   -webkit-text-fill-color: transparent;
 }
 
-.brand-title span {
+.brand-title span, .brand-logo h1 span {
   font-size: 0.8rem;
   color: var(--text-muted);
   font-weight: 500;
 }
 
-.status-badge {
+.status-badge, .status-indicator {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -117,7 +122,7 @@ header {
   font-weight: 600;
 }
 
-.status-dot {
+.status-dot, .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -134,7 +139,7 @@ header {
 /* --- Hero Section --- */
 .hero {
   text-align: center;
-  padding: 48px 0 24px;
+  padding: 40px 0 20px;
 }
 
 .hero-tag {
@@ -152,6 +157,7 @@ header {
 }
 
 .hero h2 {
+  font-family: var(--font-heading);
   font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -167,7 +173,7 @@ header {
 
 /* --- Preset Test Cases Bar --- */
 .presets-section {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .section-label {
@@ -182,14 +188,14 @@ header {
   gap: 8px;
 }
 
-.presets-grid {
+.presets-grid, .test-cases-pills {
   display: flex;
   gap: 10px;
   overflow-x: auto;
   padding-bottom: 6px;
 }
 
-.preset-btn {
+.preset-btn, .test-pill {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--text-main);
@@ -205,7 +211,7 @@ header {
   gap: 8px;
 }
 
-.preset-btn:hover {
+.preset-btn:hover, .test-pill:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-accent);
   transform: translateY(-2px);
@@ -224,18 +230,18 @@ header {
 .badge-type.edge { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
 
 /* --- Input Form Card --- */
-.form-card {
+.form-card, .input-section {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 28px;
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  margin-bottom: 40px;
+  margin-bottom: 36px;
   transition: var(--transition);
 }
 
-.form-card:focus-within {
+.form-card:focus-within, .input-section:focus-within {
   border-color: var(--border-accent);
   box-shadow: var(--shadow-glow);
 }
@@ -244,7 +250,7 @@ header {
   margin-bottom: 20px;
 }
 
-.form-label {
+.form-label, label {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -370,6 +376,7 @@ textarea:focus, input[type="text"]:focus {
 }
 
 .results-title {
+  font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 700;
 }
@@ -394,6 +401,7 @@ textarea:focus, input[type="text"]:focus {
 }
 
 .decision-text {
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
   color: white;
@@ -441,6 +449,7 @@ textarea:focus, input[type="text"]:focus {
 }
 
 .card-title {
+  font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 16px;

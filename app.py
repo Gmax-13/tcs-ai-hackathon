@@ -10,6 +10,9 @@ import os
 import logging
 from datetime import datetime, timezone
 
+from dotenv import load_dotenv
+load_dotenv()  # Load .env before anything reads env vars
+
 from flask import Flask, request, jsonify, send_from_directory
 from mentor_logic import get_mentor_guidance
 
