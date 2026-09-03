@@ -33,6 +33,21 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+:root.light-mode {
+  --bg-dark: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-card-hover: rgba(255, 255, 255, 1);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-accent: rgba(99, 102, 241, 0.5);
+  
+  --text-main: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  
+  --shadow-glow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -270,7 +285,7 @@ header, .app-header {
   font-weight: 400;
 }
 
-textarea, input[type="text"] {
+textarea, input[type="text"], select {
   width: 100%;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid var(--border-color);
@@ -283,7 +298,21 @@ textarea, input[type="text"] {
   resize: vertical;
 }
 
-textarea:focus, input[type="text"]:focus {
+:root.light-mode textarea, :root.light-mode input[type="text"], :root.light-mode select {
+  background: #ffffff;
+}
+
+select option {
+  background: #0f172a;
+  color: #f3f4f6;
+}
+
+:root.light-mode select option {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+textarea:focus, input[type="text"]:focus, select:focus {
   outline: none;
   border-color: var(--primary);
   background: rgba(15, 23, 42, 0.9);

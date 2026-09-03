@@ -26,6 +26,7 @@
         </div>
       </div>
       <div style="display: flex; gap: 12px; align-items: center;">
+        <button id="btnThemeToggle" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.78rem;">💡 Toggle Theme</button>
         <div id="statusBadge" class="status-badge">
           <span class="status-dot"></span>
           <span id="statusText">Checking Backend...</span>
@@ -145,6 +146,7 @@
     const statusText = document.getElementById('statusText');
     const statusBadge = document.getElementById('statusBadge');
     const btnHealthCheck = document.getElementById('btnHealthCheck');
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
     
     // Feature C: Validator
     const btnValidate = document.getElementById('btnValidate');
@@ -368,6 +370,11 @@
         btnSubmit.disabled = false;
       }
     }
+
+    // Theme Toggle
+    btnThemeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('light-mode');
+    });
 
     // Health check on load
     btnHealthCheck.addEventListener('click', checkHealth);
