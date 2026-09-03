@@ -44,16 +44,6 @@
       <p>Enter your problem statement and team constraints to receive structured design thinking guidance, user personas, prioritized feature roadmaps, and demo pitch tips.</p>
     </section>
 
-    <!-- Test Cases Quick Presets Bar -->
-    <section class="presets-section">
-      <div class="section-label">
-        <span>⚡ Quick Fill Test Cases (Aaron's Test Suite)</span>
-      </div>
-      <div id="presetsGrid" class="presets-grid">
-        <!-- Preset buttons injected dynamically via JS -->
-      </div>
-    </section>
-
     <!-- Input Form Card -->
     <section class="form-card">
       <form id="mentorForm">
@@ -105,9 +95,6 @@
             <span class="spinner" id="valSpinner"></span>
             <span>🔍 Validate Scope</span>
           </button>
-          <button type="button" id="btnStubPreview" class="btn btn-ghost">
-            <span>⚡ Stub Preview</span>
-          </button>
           <button type="button" id="btnClear" class="btn btn-ghost">Clear</button>
           <button type="submit" id="btnSubmit" class="btn btn-primary">
             <span class="spinner" id="btnSpinner"></span>
@@ -153,9 +140,7 @@
     const btnSubmit = document.getElementById('btnSubmit');
     const btnSpinner = document.getElementById('btnSpinner');
     const btnText = document.getElementById('btnText');
-    const btnStubPreview = document.getElementById('btnStubPreview');
     const btnClear = document.getElementById('btnClear');
-    const presetsGrid = document.getElementById('presetsGrid');
     const resultsContainer = document.getElementById('resultsContainer');
     const statusText = document.getElementById('statusText');
     const statusBadge = document.getElementById('statusBadge');
@@ -216,65 +201,6 @@
       "reason": "Solves 80% of canteen wastage with zero hardware costs within your 90-minute limit.",
       "next_action": "Build the student pre-order UI form and mock chef dashboard first."
     };
-
-    // Load Test Cases from test_cases.json
-    async function loadTestCases() {
-      try {
-        const res = await fetch('test_cases.json');
-        if (!res.ok) throw new Error('Could not load test cases');
-        const data = await res.json();
-        const testCases = data.test_cases || data;
-        renderPresets(testCases);
-      } catch (err) {
-        const fallbackCases = [
-          {
-            name: "Canteen Wastage",
-            type: "normal",
-            input: {
-              problem_statement: "Reducing food wastage in college canteens through demand prediction and surplus food redistribution.",
-              team_context: "4 people, beginner Python + HTML/CSS skills, 90 minutes remaining"
-            }
-          },
-          {
-            name: "Smart Parking",
-            type: "alternate",
-            input: {
-              problem_statement: "Real-time smart campus parking space tracking and reservation system to reduce morning congestion.",
-              team_context: "3 people, intermediate IoT & Python ML skills, 90 minutes remaining"
-            }
-          },
-          {
-            name: "Vague Input",
-            type: "edge",
-            input: {
-              problem_statement: "Fix education system.",
-              team_context: "2 people, beginner frontend developers, 60 minutes remaining"
-            }
-          }
-        ];
-        renderPresets(fallbackCases);
-      }
-    }
-
-    function renderPresets(cases) {
-      presetsGrid.innerHTML = '';
-      cases.forEach(tc => {
-        const btn = document.createElement('button');
-        btn.className = 'preset-btn';
-        btn.type = 'button';
-        const type = tc.type || tc.category || 'normal';
-        const statement = tc.problem_statement || (tc.input ? tc.input.problem_statement : '');
-        const context = tc.team_context || (tc.input ? tc.input.team_context : '');
-
-        btn.innerHTML = `<span class="badge-type ${type}">${type}</span> ${tc.name}`;
-        btn.addEventListener('click', () => {
-          problemStatement.value = statement;
-          teamContext.value = context;
-          updateCharCount();
-        });
-        presetsGrid.appendChild(btn);
-      });
-    }
 
     // Health Check
     async function checkHealth() {
@@ -349,15 +275,6 @@
         valSpinner.style.display = 'none';
         btnValidate.disabled = false;
       }
-    });
-
-    // Stub Preview Click
-    btnStubPreview.addEventListener('click', () => {
-      resultsContainer.style.display = 'block';
-      currentGuidance = SAMPLE_STUB_RESPONSE;
-      mentorRenderer.render(SAMPLE_STUB_RESPONSE);
-      followupContainer.style.display = 'block';
-      resultsContainer.scrollIntoView({ behavior: 'smooth' });
     });
 
     // Form Submit
@@ -454,7 +371,6 @@
 
     // Health check on load
     btnHealthCheck.addEventListener('click', checkHealth);
-    loadTestCases();
     checkHealth();
   </script>
 </body>
