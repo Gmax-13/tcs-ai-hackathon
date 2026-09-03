@@ -1,0 +1,19 @@
+{
+  "demo_flow": [
+    { "section": "Problem", "duration": "30s", "tip": "Start with a relatable scenario, not a technical description" },
+    { "section": "Approach", "duration": "30s", "tip": "Mention design thinking and key decisions briefly" },
+    { "section": "Solution", "duration": "2min", "tip": "LIVE DEMO — one complete user journey, narrate as you click" },
+    { "section": "Proof", "duration": "30s", "tip": "Run a test case live, acknowledge limitations honestly" },
+    { "section": "Learning", "duration": "30s", "tip": "What surprised you, future scope, end on a strong note" },
+    { "section": "Q&A", "duration": "1min", "tip": "Keep answers under 20 seconds, don't bluff" }
+  ],
+  "jury_pitch_template": "We built [SOLUTION NAME] to help [TARGET USER] with [PROBLEM]. Our approach uses [KEY TECHNOLOGY/METHOD] to [CORE VALUE]. In our demo, you'll see [ONE USER JOURNEY]. We validated with [N] test cases. If we had more time, we'd add [FUTURE FEATURE]. Key insight: [LEARNING].",
+  "common_jury_questions": [
+    { "q": "How is this different from ChatGPT?", "a": "Curated knowledge base, enforced guardrails, structured output — not generic LLM chat." },
+    { "q": "What if the AI gives bad advice?", "a": "Guides not solves, assumptions tagged, fallback to rule-based. Team still decides." },
+    { "q": "What if the AI is unavailable?", "a": "Timeout detection, keyword-matched fallback, generic template. Same schema always." },
+    { "q": "Can this scale?", "a": "Future: multi-session memory, skill calibration, voice. Current scope: single-session demo." },
+    { "q": "How did you split work?", "a": "Contract-first: locked JSON schema, each built against stubs, integrated at checkpoint." },
+    { "q": "Hardest part?", "a": "Be genuine — scoping to 90 min, consistent AI output, edge cases." }
+  ]
+}

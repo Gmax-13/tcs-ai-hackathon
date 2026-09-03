@@ -1,0 +1,184 @@
+{
+  "problems": [
+    {
+      "id": "food_waste",
+      "keywords": ["food", "waste", "canteen", "cafeteria", "meal", "surplus", "hunger", "leftover"],
+      "problem_statement_match": "food wastage in college canteens",
+      "response": {
+        "problem_summary": "College canteens consistently prepare more food than consumed, leading to significant daily waste. The core challenge is the mismatch between food preparation quantities and actual student demand, compounded by lack of feedback loops and no surplus redistribution mechanism.",
+        "key_questions": [
+          "How much food is currently wasted daily, and is there any measurement system in place?",
+          "Do students have any way to indicate meal preferences or attendance in advance?",
+          "Are there existing relationships with NGOs or food banks that could receive surplus?"
+        ],
+        "user_personas": [
+          { "name": "Hungry Student", "need": "Affordable, available meals that match their preferences", "pain_point": "Popular dishes run out early, unpopular dishes get wasted — no feedback channel exists" },
+          { "name": "Canteen Manager", "need": "Accurate demand forecasting to reduce over-preparation costs", "pain_point": "Guesses daily quantities based on intuition, absorbs financial loss from unsold food" },
+          { "name": "Campus Sustainability Officer", "need": "Measurable reduction in campus food waste for sustainability reporting", "pain_point": "No data on waste volumes, no system to track improvement over time" }
+        ],
+        "design_thinking_guidance": "Start by observing the canteen during peak hours — how much food is left over? Talk to 2-3 students about what they'd change. Define the problem narrowly: focus on ONE meal (e.g., lunch) and ONE intervention (e.g., pre-ordering OR surplus donation, not both). Prototype the simplest version that demonstrates the concept.",
+        "feature_suggestions": [
+          { "feature": "Daily meal pre-order system", "why": "Gives the canteen advance demand signals, directly reducing guesswork", "effort": "medium" },
+          { "feature": "Surplus food alert to nearby NGOs", "why": "Diverts edible surplus to people in need instead of the trash", "effort": "medium" },
+          { "feature": "Student meal feedback and rating system", "why": "Helps the canteen adjust menus based on actual preferences", "effort": "low" },
+          { "feature": "Waste tracking dashboard", "why": "You can't manage what you don't measure — makes the problem visible", "effort": "low" }
+        ],
+        "tech_stack_options": [
+          "HTML/CSS/JS frontend with a simple form for pre-orders and feedback",
+          "Python Flask backend for handling submissions and generating reports",
+          "JSON file or in-memory storage — no database needed for a prototype"
+        ],
+        "prototype_priorities": [
+          "P0: One working flow — student pre-orders a meal, canteen sees aggregated demand",
+          "P1: Waste logging — canteen enters daily waste, dashboard shows the trend",
+          "P2: Surplus alert — if waste exceeds a threshold, auto-notify a partner NGO"
+        ],
+        "validation_checkpoints": [
+          "Can a student submit a pre-order and see confirmation?",
+          "Does the canteen view show aggregated demand that would actually help planning?"
+        ],
+        "demo_prep_tips": [
+          "Pre-fill 5-10 sample pre-orders so the dashboard looks populated during the demo",
+          "Show the before (guessing) vs. after (data-driven) contrast in your pitch",
+          "Have one concrete number ready: 'If this canteen serves 500 meals and wastes 20%, that's 100 meals/day'"
+        ],
+        "decision": "Focus the prototype on the pre-order flow as the primary intervention",
+        "reason": "Pre-ordering directly addresses the root cause (demand uncertainty) and is demo-able in a short hackathon — surplus donation is a great feature but harder to demo without real NGO integration",
+        "next_action": "Build a simple pre-order form (student side) and an aggregated demand view (canteen side) — get end-to-end working before adding any secondary features"
+      }
+    },
+    {
+      "id": "parking",
+      "keywords": ["parking", "vehicle", "car", "slot", "spot", "lot", "traffic", "congestion"],
+      "problem_statement_match": "parking management",
+      "response": {
+        "problem_summary": "Campus or urban parking is chaotic — drivers waste time circling for spots, leading to congestion, frustration, and emissions. The core issue is lack of real-time visibility into parking availability.",
+        "key_questions": [
+          "How many parking spots exist, and what's the typical occupancy rate?",
+          "Is there any existing system (manual or digital) for tracking availability?",
+          "Who are the primary parkers — students, staff, visitors, or a mix?"
+        ],
+        "user_personas": [
+          { "name": "Daily Commuter", "need": "Know if a spot is available before driving to the lot", "pain_point": "Wastes 10-15 minutes circling, often late to class or meetings as a result" },
+          { "name": "Parking Administrator", "need": "Efficient allocation and utilization data for planning", "pain_point": "No data on peak times or underused areas, complaints but no actionable insights" }
+        ],
+        "design_thinking_guidance": "Observe a parking lot during morning rush. Count how many cars circle before finding a spot. Define: are you solving 'finding a spot' or 'reserving a spot'? These are different problems. For a hackathon, pick one. Prototype the simplest indicator — even a color-coded status board (green/yellow/red) adds value.",
+        "feature_suggestions": [
+          { "feature": "Real-time parking availability display", "why": "Core value — eliminates blind searching", "effort": "medium" },
+          { "feature": "Spot reservation system", "why": "Guarantees a spot, but adds complexity (no-shows, time slots)", "effort": "high" },
+          { "feature": "Peak time predictions", "why": "Helps users plan arrival time to avoid rush", "effort": "medium" },
+          { "feature": "Navigation to nearest available spot", "why": "Useful in large lots, but may be overkill for a prototype", "effort": "high" }
+        ],
+        "tech_stack_options": [
+          "Web dashboard showing lot status — HTML/JS frontend",
+          "Python backend simulating sensor data (for demo purposes)",
+          "No hardware needed — simulate occupancy with random or scripted data"
+        ],
+        "prototype_priorities": [
+          "P0: Visual display of parking lot with available/occupied spots",
+          "P1: Simple booking — user reserves a spot, it shows as occupied",
+          "P2: Historical data view — show peak hours on a chart"
+        ],
+        "validation_checkpoints": [
+          "Does the display update when a spot is taken or freed?",
+          "Can a user identify available spots without prior knowledge of the lot layout?"
+        ],
+        "demo_prep_tips": [
+          "Use a grid layout to visually represent the parking lot — green for available, red for taken",
+          "Simulate a car arriving and a spot turning red in real-time during the demo",
+          "Mention the scale: 'If a lot has 200 spots and 50 are usually empty, this system saves every driver 10 minutes'"
+        ],
+        "decision": "Build a real-time availability display as the core feature",
+        "reason": "Availability visibility solves the most common pain point and is highly demo-able — reservation adds value but doubles the build complexity",
+        "next_action": "Create a visual parking grid (simulated data), then add a simple 'park here' / 'leave' toggle to show real-time updates"
+      }
+    },
+    {
+      "id": "mental_health",
+      "keywords": ["mental", "health", "stress", "anxiety", "wellness", "counseling", "depression", "burnout", "wellbeing"],
+      "problem_statement_match": "student mental health",
+      "response": {
+        "problem_summary": "Students face increasing stress, anxiety, and burnout but lack accessible, stigma-free support channels. Most campus counseling services are underutilized due to awareness gaps, scheduling friction, and social stigma around seeking help.",
+        "key_questions": [
+          "What mental health resources currently exist on campus, and how are they accessed?",
+          "What barriers prevent students from seeking help (stigma, availability, awareness)?",
+          "Is the goal early detection, resource access, or peer support — or a combination?"
+        ],
+        "user_personas": [
+          { "name": "Stressed Student", "need": "A private, low-barrier way to assess their mental state and find help", "pain_point": "Doesn't want to be seen walking into a counseling office, unsure if their stress 'counts' as needing help" },
+          { "name": "Campus Counselor", "need": "Better visibility into student wellbeing trends to allocate resources", "pain_point": "Only sees students who self-refer — misses the majority who suffer silently" }
+        ],
+        "design_thinking_guidance": "This is a sensitive domain — empathy is critical. Start by understanding the barriers, not the solution. Define carefully: are you building a screening tool, a resource directory, or a peer support platform? Each has different implications. For a hackathon, a mood tracker with resource suggestions is achievable and impactful.",
+        "feature_suggestions": [
+          { "feature": "Anonymous mood check-in with weekly trend", "why": "Low barrier, no stigma, makes invisible patterns visible", "effort": "low" },
+          { "feature": "Resource directory with smart matching", "why": "Connects the right resource to the right need — counseling vs. peer support vs. crisis line", "effort": "low" },
+          { "feature": "Guided breathing / mindfulness exercise", "why": "Immediate, actionable relief — useful even without backend infrastructure", "effort": "low" },
+          { "feature": "Anonymous peer support forum", "why": "Students help students — but requires moderation planning", "effort": "medium" }
+        ],
+        "tech_stack_options": [
+          "Simple web app — HTML/JS for the mood tracker UI",
+          "No backend needed for a mood tracker prototype — store data locally",
+          "Optional: Flask backend if you want aggregated (anonymous) trends"
+        ],
+        "prototype_priorities": [
+          "P0: Mood check-in — user selects mood, sees it logged with a trend over time",
+          "P1: Resource suggestions — based on mood level, show relevant campus resources",
+          "P2: Guided breathing exercise — simple timed animation"
+        ],
+        "validation_checkpoints": [
+          "Does the mood check-in feel safe and private — would a student actually use it?",
+          "Are resource suggestions relevant and actionable, not generic?"
+        ],
+        "demo_prep_tips": [
+          "Pre-populate a week of mood data so the trend chart looks meaningful during the demo",
+          "Emphasize the privacy/anonymity angle — this is the key differentiator",
+          "Be prepared for jury questions about data privacy and crisis handling — have thoughtful answers ready"
+        ],
+        "decision": "Build an anonymous mood tracker with resource suggestions as the core flow",
+        "reason": "Low technical complexity, high emotional impact in the demo, and directly addresses the stigma barrier — more ambitious features like peer forums need moderation infrastructure that's impractical for a hackathon",
+        "next_action": "Create the mood check-in UI (5-point scale or emoji picker), store entries locally, and display a simple trend chart — then add 2-3 resource cards that appear based on mood level"
+      }
+    }
+  ],
+  "generic_fallback": {
+    "problem_summary": "This problem involves identifying a specific user need and building a focused solution that addresses it within the available time and resources. The key challenge is scoping — narrowing from a broad problem space to a specific, demo-able intervention.",
+    "key_questions": [
+      "Who is the primary user, and what is their single biggest pain point?",
+      "What does success look like — how will you know the solution works?",
+      "What is the simplest version that still demonstrates the core value?"
+    ],
+    "user_personas": [
+      { "name": "End User", "need": "A simpler, faster, or more accessible way to handle a specific task", "pain_point": "Current process is manual, slow, confusing, or inaccessible" },
+      { "name": "Administrator", "need": "Better visibility, efficiency, or data for decision-making", "pain_point": "Lacks real-time data, relies on manual tracking, can't act proactively" }
+    ],
+    "design_thinking_guidance": "Start with empathy — understand WHO has this problem and WHY current solutions fail. Define the problem in one sentence: '[User] needs [need] because [insight]'. Ideate 3 approaches before committing. Prototype the smallest version that proves the concept. Test with at least one normal case and one edge case before demoing.",
+    "feature_suggestions": [
+      { "feature": "Core input form for the primary user action", "why": "Every solution needs a way for users to interact — start here", "effort": "low" },
+      { "feature": "Processing logic that transforms input into useful output", "why": "This is where your AI/rule-based logic lives — the brain of the solution", "effort": "medium" },
+      { "feature": "Output display that presents results clearly", "why": "The jury sees this — make it structured and readable", "effort": "low" },
+      { "feature": "One 'wow' feature that differentiates from a basic CRUD app", "why": "This is what makes your solution memorable — AI insight, visualization, or smart recommendation", "effort": "medium" }
+    ],
+    "tech_stack_options": [
+      "HTML/CSS/JavaScript for a lightweight frontend",
+      "Python with Flask for a quick backend API",
+      "In-memory data or JSON files — avoid database setup unless you have experience"
+    ],
+    "prototype_priorities": [
+      "P0: One complete user journey — input to output, working end-to-end",
+      "P1: Handle the main alternative case (different input type or user role)",
+      "P2: Polish the output display for demo impact"
+    ],
+    "validation_checkpoints": [
+      "Does the solution work for the normal case without errors?",
+      "Can someone unfamiliar with your code understand the output?"
+    ],
+    "demo_prep_tips": [
+      "Have your demo inputs ready to paste — don't type live under pressure",
+      "Practice the demo flow once: Problem → Approach → Solution → Proof → Learning",
+      "Prepare honest answers for 'what would you do with more time?'"
+    ],
+    "decision": "Focus on building one complete user journey before adding features",
+    "reason": "A working end-to-end flow with one feature scores higher than a broken demo with five features — the jury is judging whether your solution works, not how many features you planned",
+    "next_action": "Define your single most important user flow, build it end-to-end, then test it with at least 2 inputs before adding anything else"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "framework": {
+    "name": "Design Thinking for Hackathons",
+    "steps": [
+      {
+        "step": "Empathize",
+        "description": "Understand the real users and their pain points before jumping to solutions.",
+        "prompts": [
+          "Who are the 2-3 types of people most affected by this problem?",
+          "What frustrations do they face daily related to this issue?",
+          "Have you talked to or observed anyone who experiences this problem?",
+          "What workarounds do people currently use?"
+        ],
+        "common_mistakes": [
+          "Assuming you are the user",
+          "Skipping empathy and jumping straight to features",
+          "Defining the problem too broadly"
+        ]
+      },
+      {
+        "step": "Define",
+        "description": "Narrow the problem into a specific, actionable problem statement.",
+        "prompts": [
+          "Can you state the problem in one sentence: '[User] needs [need] because [insight]'?",
+          "What is the single most important outcome your solution should deliver?",
+          "What will you explicitly NOT solve in this prototype?",
+          "How will you measure success — what does 'working' look like?"
+        ],
+        "common_mistakes": [
+          "Trying to solve everything at once",
+          "Defining the problem as a solution ('we need an app')",
+          "Not scoping for the available time"
+        ]
+      },
+      {
+        "step": "Ideate",
+        "description": "Brainstorm multiple approaches before committing to one.",
+        "prompts": [
+          "What are 3 completely different ways you could approach this?",
+          "What's the simplest version that still proves the concept?",
+          "What would a non-technical solution look like?",
+          "Which idea can you prototype in the time you have?"
+        ],
+        "common_mistakes": [
+          "Committing to the first idea without exploring alternatives",
+          "Over-engineering the solution for a prototype",
+          "Ignoring feasibility given the team's skills and time"
+        ]
+      },
+      {
+        "step": "Prototype",
+        "description": "Build the smallest working version that demonstrates the core value.",
+        "prompts": [
+          "What is the one feature that makes your solution unique?",
+          "Can you demo the core flow in under 2 minutes?",
+          "What can you hardcode or fake to save time without losing the demo impact?",
+          "What's your fallback if the main tech doesn't work?"
+        ],
+        "common_mistakes": [
+          "Building features nobody asked for",
+          "Spending too long on UI polish before the logic works",
+          "Not having a fallback plan"
+        ]
+      },
+      {
+        "step": "Test",
+        "description": "Validate your prototype against real scenarios before presenting.",
+        "prompts": [
+          "Does your solution handle the normal case correctly?",
+          "What happens with unexpected or edge-case input?",
+          "Can someone outside your team understand the output?",
+          "Does the demo flow tell a clear story?"
+        ],
+        "common_mistakes": [
+          "Skipping testing to add more features",
+          "Only testing the happy path",
+          "Not rehearsing the demo"
+        ]
+      }
+    ]
+  },
+  "persona_templates": [
+    {
+      "role": "Primary User",
+      "template": {
+        "name": "The person most directly affected by the problem",
+        "need": "Their core unmet need related to this domain",
+        "pain_point": "The specific frustration or inefficiency they experience"
+      }
+    },
+    {
+      "role": "Secondary User",
+      "template": {
+        "name": "Someone indirectly affected or who supports the primary user",
+        "need": "Their need in the context of the primary user's problem",
+        "pain_point": "How the current situation makes their role harder"
+      }
+    },
+    {
+      "role": "Administrator/Manager",
+      "template": {
+        "name": "The person responsible for oversight, policy, or resource allocation",
+        "need": "Visibility, efficiency, or compliance in the problem domain",
+        "pain_point": "Lack of data, manual processes, or inability to act proactively"
+      }
+    }
+  ]
+}
