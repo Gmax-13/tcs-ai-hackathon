@@ -28,7 +28,7 @@
 |---|---|---|
 | Frontend | HTML/JS or React (Aaron's call) | Minimal input form — don't over-invest here |
 | Backend | Flask (Python) | Fast to stand up, one route, no boilerplate |
-| AI | Groq API — `llama-3.3-70b-versatile` | Fast inference (sub-second), JSON mode support, free tier sufficient for demo |
+| AI | Groq API — `qwen/qwen3.8-27b` | Fast inference (sub-second), JSON mode support, free tier sufficient for demo |
 | Fallback | Rule-based Python dict lookup | Zero external dependency, guarantees demo never fails |
 | Hosting | Localhost / ngrok for demo | No deployment complexity for a 90-min prototype |
 | Data | None persisted — stateless request/response | No DB setup/debugging time cost |
@@ -69,17 +69,20 @@ tcs-ai-hackathon/
 ```json
 {
   "problem_statement": "string, required",
-  "team_context": "string, optional"
+  "team_context": "string, optional",
+  "phase": "string, optional — one of: understand|build|test|demo"
 }
 ```
 
 > NOTE: `team_context` is a **plain string** (e.g. "4 people, python + html skills, 90 min, beginners") — NOT a structured object.
+> NOTE: `phase` tailors the guidance emphasis to where the team is in the hackathon (Feature D).
 
 ### Response: `POST /api/mentor` → 200 OK
 
 ```json
 {
   "problem_summary": "string",
+  "assumptions": ["string — things the AI inferred that the team did NOT state"],
   "key_questions": ["string", "string", "string"],
   "user_personas": [
     { "name": "string", "need": "string", "pain_point": "string" }
@@ -181,9 +184,23 @@ Expected output checks: problem_summary present, user_personas has 2+, feature_s
 ## 9. API Endpoints
 
 ### `POST /api/mentor` — Main endpoint
-- Accepts `{ problem_statement, team_context }`
+- Accepts `{ problem_statement, team_context, phase }`
+- `phase` is optional: `understand|build|test|demo` — tailors guidance emphasis
 - Returns full structured guidance (see I/O Contract)
+- Response now includes `assumptions` array (Feature A)
 - Uses Groq API primarily, falls back to rule-based if API fails
+
+### `POST /api/followup` — Follow-up questions (Feature B)
+- Accepts `{ original_guidance, question, team_context }`
+- `original_guidance` is the full JSON from `/api/mentor`
+- Returns focused guidance: `{ answer, related_suggestions, next_steps, warning }`
+- Has its own fallback — never fails
+
+### `POST /api/validate` — Problem statement validator (Feature C)
+- Accepts `{ problem_statement }`
+- Returns quality score + feedback: `{ score, max_score, feedback[], improved_statement }`
+- Rule-based scoring + optional LLM enhancement for improved statement
+- Checks: Specificity, User Focus, Scope, Innovation Potential
 
 ### `GET /api/health` — Health check
 ```json
@@ -332,10 +349,14 @@ If everything breaks in the last 10 minutes:
 |----------|--------|--------|
 | Frontend | HTML/JS or React (Aaron's call) | Minimal form, don't over-invest |
 | Backend | Flask (Python) | One route, no boilerplate |
-| LLM | Groq `llama-3.3-70b-versatile` | Fast, free, JSON mode |
+| LLM | Groq `qwen/qwen3.8-27b` | Available on free tier, fast, JSON mode |
 | Fallback | Rule-based dict lookup | Zero dependency, demo-proof |
 | Database | None | Stateless, single-session demo |
 | team_context | Plain string | Simple, flexible, no parsing needed |
+| Assumptions (Feature A) | Tag AI inferences | Teaches teams to validate, strong jury point |
+| Follow-up (Feature B) | Separate endpoint | Simulates real mentor conversation |
+| Validator (Feature C) | Rule + LLM scoring | Catches vague problems before mentoring |
+| Phase-aware (Feature D) | Prompt injection | Tailors guidance to hackathon phase |
 
 ---
 

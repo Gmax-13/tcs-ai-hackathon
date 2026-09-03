@@ -6,7 +6,7 @@
 |---|---|---|
 | Frontend | HTML/JS or React (Aaron's call) | Minimal input form — don't over-invest here |
 | Backend | Flask (Python) | Fast to stand up, one route, no boilerplate |
-| AI | Groq API — `llama-3.3-70b-versatile` | Fast inference (sub-second), JSON mode support, free tier sufficient for demo |
+| AI | Groq API — `qwen/qwen3.8-27b` | Fast inference (sub-second), JSON mode support, free tier sufficient for demo |
 | Fallback | Rule-based Python dict lookup | Zero external dependency, guarantees demo never fails |
 | Hosting (if needed) | Localhost / ngrok for demo | No deployment complexity for a 90-min prototype |
 | Data | None persisted — stateless request/response | No DB setup/debugging time cost |
@@ -22,7 +22,8 @@
 ```json
 {
   "problem_statement": "string, required",
-  "team_context": "string, optional"
+  "team_context": "string, optional",
+  "phase": "string, optional — one of: understand|build|test|demo"
 }
 ```
 
@@ -30,6 +31,7 @@
 ```json
 {
   "problem_summary": "string",
+  "assumptions": ["string — things the AI inferred, not stated by the team"],
   "key_questions": ["string", "string", "string"],
   "user_personas": [
     { "name": "string", "need": "string", "pain_point": "string" }
@@ -49,3 +51,21 @@
 ```
 
 This exact JSON is what Aaron's UI sends and what Anurodh's renderer consumes. **Nobody changes field names without updating this file and telling the other two.**
+
+## Additional Endpoints
+
+**Follow-up** (`POST /api/followup`):
+```json
+// Request
+{ "original_guidance": { /* full /api/mentor response */ }, "question": "string", "team_context": "string, optional" }
+// Response
+{ "answer": "string", "related_suggestions": ["string"], "next_steps": ["string"], "warning": "string|null" }
+```
+
+**Validator** (`POST /api/validate`):
+```json
+// Request
+{ "problem_statement": "string" }
+// Response
+{ "score": number, "max_score": 10, "feedback": [{ "category": "string", "score": number, "status": "good|needs_work|warning", "note": "string" }], "improved_statement": "string|null" }
+```
