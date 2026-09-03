@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackathon Mentor AI — Smart Guidance & Decision Engine</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sticky App Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-logo">
+        <div class="logo-badge">AI</div>
+        <h1>Hackathon Mentor <span>Assistant</span></h1>
+      </div>
+      <div class="header-status">
+        <div class="status-indicator">
+          <span class="dot" id="server-dot"></span>
+          <span id="server-status-text">Checking server...</span>
+        </div>
+        <button id="test-runner-toggle" class="btn btn-secondary" style="font-size: 0.8rem;">
+          🧪 Test Case Suite
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-wrapper">
+
+    <!-- Interactive Test Case Suite Drawer (Phase 5 Proof & Smoke Testing) -->
+    <div id="test-suite-card" class="test-runner-card" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-family: var(--font-heading); font-size: 1rem; color: var(--accent-cyan);">
+          🧪 Phase 5 Test Suite Runner (Proof of Functionality)
+        </h3>
+        <button id="close-test-suite" class="btn btn-secondary" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">✕ Close</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+        Select any pre-configured test case below to auto-populate the input and run through the pipeline:
+      </p>
+      <div id="test-cases-list" class="test-cases-pills">
+        <!-- Test cases loaded dynamically -->
+      </div>
+    </div>
+
+    <!-- Aaron's Input Form Section -->
+    <section class="card input-section">
+      <div class="section-title-bar">
+        <h2>
+          <span>📝</span> Input Problem Statement & Team Context
+        </h2>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label style="font-size: 0.8rem; color: var(--text-secondary);" for="stub-toggle">
+            Use Stub JSON Mode:
+          </label>
+          <input type="checkbox" id="stub-toggle" style="cursor: pointer;">
+        </div>
+      </div>
+
+      <form id="mentor-form" onsubmit="return false;">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="problem_statement">Problem Statement <span style="color: var(--accent-rose)">*</span></label>
+            <textarea 
+              id="problem_statement" 
+              name="problem_statement" 
+              rows="3" 
+              placeholder="e.g. Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="team_context">Team Context (Skills, Experience, Time Remaining — Optional)</label>
+            <input 
+              type="text" 
+              id="team_context" 
+              name="team_context" 
+              placeholder="e.g. 4 members, Python Flask backend, HTML/CSS frontend, 90 mins remaining..."
+            />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="submit-btn" class="btn btn-primary">
+              🚀 Get Mentor Guidance
+            </button>
+            <button type="button" id="load-stub-direct" class="btn btn-secondary">
+              ⚡ Quick Stub Demo
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Anurodh's Output View Section Container -->
+    <section id="output-renderer-target">
+      <!-- MentorRenderer injects content here -->
+    </section>
+
+  </main>
+
+  <!-- External JS Dependencies -->
+  <script src="stub_data.js"></script>
+  <script src="renderer.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Anurodh's Output Renderer
+      const renderer = new window.MentorRenderer('output-renderer-target');
+
+      // 1. Initial Default Render using Stub Data
+      renderer.render(window.STUB_MENTOR_DATA);
+
+      // Check Server Health Endpoint
+      fetch('/api/health')
+        .then(res => res.json())
+        .then(data => {
+          const dot = document.getElementById('server-dot');
+          const text = document.getElementById('server-status-text');
+          if (data && data.status === 'ok') {
+            dot.style.background = '#10b981';
+            text.innerText = `Flask Server Active (${data.mode.toUpperCase()} mode)`;
+          }
+        })
+        .catch(() => {
+          const text = document.getElementById('server-status-text');
+          text.innerText = 'Offline (Stub Renderer Ready)';
+        });
+
+      // Load Test Cases into Drawer
+      fetch('/api/test-cases')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.test_cases) {
+            renderTestCases(data.test_cases);
+          }
+        })
+        .catch(() => {
+          // Fallback static test case pills if server unavailable
+          renderTestCases([
+            { id: 'TC-01', name: 'Canteen Food Wastage', problem_statement: 'Reduce food wastage in college canteens by predicting meal demand and enabling dynamic portion ordering.', team_context: '4 members, Python Flask, 90 min' },
+            { id: 'TC-02', name: 'Smart Campus Parking', problem_statement: 'Smart parking slot allocation and navigation for campus vehicles during peak hours.', team_context: '2 members, React/Node.js' }
+          ]);
+        });
+
+      function renderTestCases(testCases) {
+        const container = document.getElementById('test-cases-list');
+        container.innerHTML = testCases.map(tc => `
+          <button class="test-pill" data-problem="${escapeAttr(tc.problem_statement)}" data-context="${escapeAttr(tc.team_context || '')}">
+            <strong>${tc.id}</strong>: ${tc.name}
+          </button>
+        `).join('');
+
+        document.querySelectorAll('.test-pill').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            document.getElementById('problem_statement').value = btn.dataset.problem;
+            document.getElementById('team_context').value = btn.dataset.context;
+            submitForm();
+          });
+        });
+      }
+
+      function escapeAttr(str) {
+        return (str || '').replace(/"/g, '&quot;');
+      }
+
+      // Form Submission Handler
+      const submitBtn = document.getElementById('submit-btn');
+      const form = document.getElementById('mentor-form');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitForm();
+      });
+
+      document.getElementById('load-stub-direct').addEventListener('click', () => {
+        renderer.render(window.STUB_MENTOR_DATA);
+      });
+
+      function submitForm() {
+        const problemStatement = document.getElementById('problem_statement').value.trim();
+        const teamContext = document.getElementById('team_context').value.trim();
+        const forceStub = document.getElementById('stub-toggle').checked;
+
+        if (!problemStatement) {
+          alert('Please enter a problem statement.');
+          return;
+        }
+
+        if (forceStub) {
+          renderer.render(window.STUB_MENTOR_DATA);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = '⏳ Generating Guidance...';
+
+        fetch('/api/mentor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            problem_statement: problemStatement,
+            team_context: teamContext
+          })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('API server returned error');
+          return res.json();
+        })
+        .then(data => {
+          renderer.render(data);
+        })
+        .catch(err => {
+          console.warn('API call failed or offline, falling back to stub renderer:', err);
+          renderer.render(window.STUB_MENTOR_DATA);
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerText = '🚀 Get Mentor Guidance';
+        });
+      }
+
+      // Test Suite Drawer Toggle
+      const testToggle = document.getElementById('test-runner-toggle');
+      const testSuite = document.getElementById('test-suite-card');
+      const closeTest = document.getElementById('close-test-suite');
+
+      testToggle.addEventListener('click', () => {
+        testSuite.style.display = testSuite.style.display === 'none' ? 'block' : 'none';
+      });
+
+      closeTest.addEventListener('click', () => {
+        testSuite.style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
