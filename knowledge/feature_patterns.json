@@ -1,0 +1,88 @@
+{
+  "domains": {
+    "food_waste": {
+      "label": "Food & Waste Management",
+      "keywords": ["food", "waste", "canteen", "cafeteria", "meal", "surplus", "hunger", "donation", "leftover"],
+      "features": [
+        { "feature": "Demand prediction based on historical meal data", "why": "Reduces over-preparation, the #1 cause of canteen waste", "effort": "high", "impact": "high" },
+        { "feature": "Surplus food donation matching with nearby NGOs", "why": "Diverts edible surplus from trash to people in need", "effort": "medium", "impact": "high" },
+        { "feature": "Daily menu feedback system for students", "why": "Helps canteen adjust menus to actual demand, reducing unpopular dishes", "effort": "low", "impact": "medium" },
+        { "feature": "Waste tracking dashboard with daily/weekly trends", "why": "Makes the problem visible — you can't manage what you don't measure", "effort": "medium", "impact": "medium" },
+        { "feature": "Pre-order system for meals", "why": "Gives the canteen advance demand signals, reducing guesswork", "effort": "medium", "impact": "high" },
+        { "feature": "Gamification — reward students for zero-waste meals", "why": "Behavioral nudge that makes reducing waste a social activity", "effort": "low", "impact": "low" }
+      ]
+    },
+    "education": {
+      "label": "Education & Learning",
+      "keywords": ["education", "learning", "student", "teacher", "course", "study", "exam", "attendance", "classroom", "school", "college", "university"],
+      "features": [
+        { "feature": "Personalized learning path based on student performance", "why": "Students learn at different paces — one-size-fits-all fails", "effort": "high", "impact": "high" },
+        { "feature": "Automated doubt resolution using curated Q&A", "why": "Students hesitate to ask in class — async Q&A removes that barrier", "effort": "medium", "impact": "high" },
+        { "feature": "Smart attendance with engagement tracking", "why": "Attendance alone doesn't capture learning — engagement metrics add depth", "effort": "medium", "impact": "medium" },
+        { "feature": "Peer tutoring matchmaking", "why": "Students who recently learned a concept often explain it better than textbooks", "effort": "low", "impact": "medium" },
+        { "feature": "Visual progress dashboard for students and parents", "why": "Transparency motivates students and keeps parents informed", "effort": "low", "impact": "medium" },
+        { "feature": "AI-generated practice questions from lecture notes", "why": "Bridges the gap between passive listening and active recall", "effort": "high", "impact": "high" }
+      ]
+    },
+    "campus": {
+      "label": "Campus & Facilities",
+      "keywords": ["campus", "parking", "facility", "room", "booking", "space", "library", "lab", "maintenance", "infrastructure"],
+      "features": [
+        { "feature": "Real-time room/lab availability tracker", "why": "Students waste time walking to rooms only to find them occupied", "effort": "medium", "impact": "high" },
+        { "feature": "Maintenance request system with status tracking", "why": "Broken infrastructure stays broken because nobody reports it efficiently", "effort": "low", "impact": "medium" },
+        { "feature": "Smart parking slot finder", "why": "Circling for parking wastes time and fuel — live availability solves this", "effort": "high", "impact": "high" },
+        { "feature": "Event/room booking with conflict detection", "why": "Double-bookings cause chaos — automated conflict checks prevent them", "effort": "medium", "impact": "medium" },
+        { "feature": "Campus navigation for new students", "why": "Large campuses are disorienting for freshers — indoor maps help", "effort": "medium", "impact": "low" },
+        { "feature": "Energy usage dashboard per building", "why": "Visibility drives conservation — buildings compete to reduce waste", "effort": "low", "impact": "low" }
+      ]
+    },
+    "health": {
+      "label": "Health & Wellness",
+      "keywords": ["health", "wellness", "mental", "fitness", "doctor", "patient", "hospital", "medicine", "stress", "anxiety", "sleep"],
+      "features": [
+        { "feature": "Symptom checker with triage recommendations", "why": "Helps users decide if they need a doctor visit or self-care", "effort": "high", "impact": "high" },
+        { "feature": "Mood/stress tracker with weekly patterns", "why": "Makes invisible mental health trends visible and actionable", "effort": "low", "impact": "medium" },
+        { "feature": "Appointment booking with smart scheduling", "why": "Reduces no-shows and wait times by optimizing slot allocation", "effort": "medium", "impact": "high" },
+        { "feature": "Medication reminder with refill alerts", "why": "Adherence drops without reminders — simple notifications save lives", "effort": "low", "impact": "high" },
+        { "feature": "Anonymous peer support forum", "why": "Students need mental health outlets without stigma — anonymity helps", "effort": "medium", "impact": "medium" },
+        { "feature": "Daily wellness tips based on user context", "why": "Personalized nudges are more effective than generic health advice", "effort": "low", "impact": "low" }
+      ]
+    },
+    "environment": {
+      "label": "Environment & Sustainability",
+      "keywords": ["environment", "sustainability", "green", "carbon", "pollution", "recycle", "water", "energy", "climate", "eco"],
+      "features": [
+        { "feature": "Personal carbon footprint calculator", "why": "Awareness is the first step to behavioral change", "effort": "medium", "impact": "medium" },
+        { "feature": "Recycling guide with barcode scanner", "why": "People want to recycle but don't know which bin — instant lookup helps", "effort": "medium", "impact": "medium" },
+        { "feature": "Community clean-up event organizer", "why": "Collective action is more impactful and motivating than individual effort", "effort": "low", "impact": "medium" },
+        { "feature": "Water usage tracker per household/building", "why": "Metering drives conservation — visibility changes behavior", "effort": "high", "impact": "high" },
+        { "feature": "Green commute planner (carpool/cycle/public transit)", "why": "Transport is a major emission source — alternatives need to be easy", "effort": "medium", "impact": "high" },
+        { "feature": "Sustainability score for campus activities", "why": "Gamifies eco-friendly behavior at an institutional level", "effort": "low", "impact": "low" }
+      ]
+    },
+    "safety": {
+      "label": "Safety & Security",
+      "keywords": ["safety", "security", "emergency", "crime", "alert", "women", "night", "travel", "accident", "disaster"],
+      "features": [
+        { "feature": "SOS panic button with live location sharing", "why": "In emergencies, speed matters — one tap should alert trusted contacts", "effort": "medium", "impact": "high" },
+        { "feature": "Safe route suggestions based on time of day", "why": "Some routes are unsafe at night — data-driven suggestions protect users", "effort": "high", "impact": "high" },
+        { "feature": "Incident reporting with anonymous option", "why": "Underreporting is the biggest problem — anonymity lowers the barrier", "effort": "low", "impact": "medium" },
+        { "feature": "Community safety heatmap", "why": "Crowdsourced data reveals unsafe zones that official data misses", "effort": "medium", "impact": "medium" },
+        { "feature": "Emergency contact auto-dialer", "why": "During panic, manually dialing is hard — automation saves seconds", "effort": "low", "impact": "high" },
+        { "feature": "Safety tip notifications based on location", "why": "Context-aware alerts are more useful than generic safety advice", "effort": "medium", "impact": "low" }
+      ]
+    },
+    "transport": {
+      "label": "Transport & Mobility",
+      "keywords": ["transport", "traffic", "bus", "route", "commute", "ride", "share", "taxi", "metro", "train"],
+      "features": [
+        { "feature": "Real-time bus/shuttle tracker", "why": "Waiting without information is frustrating — live ETAs reduce anxiety", "effort": "medium", "impact": "high" },
+        { "feature": "Carpool matching for similar routes and schedules", "why": "Reduces cost, emissions, and parking pressure simultaneously", "effort": "medium", "impact": "high" },
+        { "feature": "Multi-modal route planner (walk + bus + metro)", "why": "No single mode is always best — combining them optimizes the trip", "effort": "high", "impact": "medium" },
+        { "feature": "Crowd-level indicator for public transit", "why": "Helps users avoid packed vehicles — improves comfort and safety", "effort": "medium", "impact": "medium" },
+        { "feature": "Parking availability predictor", "why": "Saves the time wasted circling for spots — predictive beats reactive", "effort": "high", "impact": "high" },
+        { "feature": "Ride-share safety verification", "why": "Trust is the main barrier to ride-sharing — verification builds it", "effort": "low", "impact": "medium" }
+      ]
+    }
+  }
+}

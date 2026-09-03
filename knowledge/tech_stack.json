@@ -1,0 +1,66 @@
+{
+  "recommendations": {
+    "beginner_short": {
+      "label": "Beginner team, limited time (< 2 hours)",
+      "keywords": ["beginner", "new", "first hackathon", "learning", "short time", "90 min", "1 hour", "2 hour"],
+      "stack": [
+        "HTML + CSS + vanilla JavaScript for the frontend — no framework overhead",
+        "Python with Flask for the backend — minimal boilerplate, great for prototyping",
+        "JSON files or in-memory dictionaries for data — no database setup needed",
+        "Free APIs (Groq, OpenAI free tier) for AI features — avoid complex ML pipelines"
+      ],
+      "rationale": "Minimize moving parts. Every new technology is a potential debugging sinkhole under time pressure. Stick to what the team already knows."
+    },
+    "beginner_long": {
+      "label": "Beginner team, more time (3+ hours)",
+      "keywords": ["beginner", "longer", "half day", "3 hour", "4 hour"],
+      "stack": [
+        "React (Create React App or Vite) for a more structured frontend",
+        "Node.js with Express or Python with Flask for the backend",
+        "SQLite or JSON file storage for simple persistence",
+        "One external API for the core AI/data feature"
+      ],
+      "rationale": "With more time, a lightweight framework adds structure without overwhelming beginners. But still avoid over-engineering — one framework per layer is enough."
+    },
+    "intermediate_short": {
+      "label": "Intermediate team, limited time (< 2 hours)",
+      "keywords": ["intermediate", "some experience", "built before", "short time"],
+      "stack": [
+        "React or Vue.js for the frontend — use whichever the team already knows",
+        "Flask or FastAPI for the backend — FastAPI if the team wants async",
+        "In-memory storage or SQLite — no remote database setup",
+        "Groq or OpenAI API for AI features with a rule-based fallback"
+      ],
+      "rationale": "Intermediate teams can handle a framework but should still avoid setup-heavy tools. Speed comes from using familiar tech, not new tech."
+    },
+    "intermediate_long": {
+      "label": "Intermediate team, more time (3+ hours)",
+      "keywords": ["intermediate", "longer", "experienced"],
+      "stack": [
+        "React/Next.js or Vue/Nuxt for frontend with routing",
+        "Node.js/Express or Python/FastAPI for the backend",
+        "MongoDB Atlas (free tier) or PostgreSQL for persistence",
+        "LLM API with structured output (JSON mode) + vector search if relevant"
+      ],
+      "rationale": "With time and experience, teams can set up a fuller stack. But prioritize the demo flow over infrastructure — a working end-to-end beats a sophisticated backend nobody sees."
+    },
+    "advanced_short": {
+      "label": "Advanced team, limited time",
+      "keywords": ["advanced", "experienced", "ML", "machine learning", "data science"],
+      "stack": [
+        "Whatever frontend framework the team is fastest with",
+        "FastAPI or Flask for rapid backend iteration",
+        "Pre-trained models (HuggingFace, spaCy) instead of training from scratch",
+        "Docker if the team has a boilerplate ready — otherwise skip it"
+      ],
+      "rationale": "Advanced teams should resist the urge to build complex infrastructure. The jury sees the demo, not the architecture. Use pre-built components aggressively."
+    }
+  },
+  "general_advice": [
+    "Use what you already know — a hackathon is not the time to learn a new framework",
+    "Every technology choice should survive the question: 'Can we debug this in 10 minutes if it breaks?'",
+    "If you're debating between two options for more than 2 minutes, pick the simpler one",
+    "Free tiers and local hosting are your friends — don't waste time on deployment",
+    "Have a fallback for every external dependency (API down? Use a hardcoded response)"
+  ]
+}
