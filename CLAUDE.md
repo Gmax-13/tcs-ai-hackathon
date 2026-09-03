@@ -1,6 +1,8 @@
 # CLAUDE.md — TCS Tech Day Hackathon: AI Mentor Assistant
 
-> **This file is the single source of truth.** Every team member uses Claude Code with this file as context. Do NOT create separate design docs — update this file instead.
+> **This file is the single source of truth for Claude Code sessions.**
+> The `context/` folder is the project's source of truth for architecture, stack, ideas, guardrails, tasks, and best practices.
+> Every team member uses Claude Code with this file as context. Do NOT create separate design docs — update this file instead.
 
 ---
 
@@ -13,8 +15,8 @@
 [Team Input] → [Knowledge Base + LLM] → [Structured Mentor Output]
 ```
 
-**Input:** Hackathon problem statement + team context (team size, skills, time available)
-**Output:** Structured guidance — problem summary, personas, features, tech stack, demo prep, action plan
+**Input:** Hackathon problem statement + team context (string, optional — name, skills, time left)
+**Output:** Structured JSON guidance — problem summary, personas, features, tech stack, demo prep, action plan
 
 **Key principle (from mentor):** 70% knowledge base, 30% LLM response. The assistant should be driven by curated templates/frameworks/patterns, with the LLM adapting and personalizing — NOT generating from scratch.
 
@@ -22,16 +24,16 @@
 
 ## 2. Tech Stack
 
-| Layer | Technology | Why |
-|-------|-----------|-----|
-| Frontend | **HTML + CSS + Vanilla JS** (single `index.html`) | Fast, no build step, demo-ready |
-| Backend/Logic | **Python Flask** (`app.py`) | Simple server, easy LLM integration |
-| LLM Provider | **Groq API** (Llama 3) — primary | Free tier, fast inference |
-| Fallback | **Rule-based** hardcoded responses | Works offline, no API dependency |
-| Knowledge Base | **JSON files** (`knowledge/`) | Structured templates, frameworks, patterns |
-| Hosting | **Local** (`localhost:5000`) | Demo on single laptop |
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend | HTML/JS or React (Aaron's call) | Minimal input form — don't over-invest here |
+| Backend | Flask (Python) | Fast to stand up, one route, no boilerplate |
+| AI | Groq API — `llama-3.3-70b-versatile` | Fast inference (sub-second), JSON mode support, free tier sufficient for demo |
+| Fallback | Rule-based Python dict lookup | Zero external dependency, guarantees demo never fails |
+| Hosting | Localhost / ngrok for demo | No deployment complexity for a 90-min prototype |
+| Data | None persisted — stateless request/response | No DB setup/debugging time cost |
 
-**Do NOT use:** React, Node.js, Docker, databases, auth, or anything requiring npm/pip install beyond flask + requests.
+**Explicitly NOT using:** No database, no auth, no frontend framework overhead (unless Aaron has boilerplate ready).
 
 ---
 
@@ -39,116 +41,66 @@
 
 ```
 tcs-ai-hackathon/
-├── CLAUDE.md              ← THIS FILE (project truth)
-├── app.py                 ← Flask server + LLM logic (Savio)
-├── index.html             ← Frontend chat UI (Aaron)
+├── CLAUDE.md              ← THIS FILE (Claude Code context)
+├── context/               ← PROJECT SOURCE OF TRUTH
+│   ├── 01_ARCHITECTURE.md
+│   ├── 02_TECH_STACK.md
+│   ├── 03_NOVEL_IDEAS.md
+│   ├── 04_GUARDRAILS.md
+│   ├── 05_TASKLIST.md
+│   └── 06_BEST_PRACTICES.md
+├── app.py                 ← Flask server (Savio owns endpoint)
+├── mentor_logic.py        ← AI mentor logic — Groq API + fallback (Savio)
+├── index.html             ← Frontend chat UI / input form (Aaron)
 ├── style.css              ← Styles (Aaron)
 ├── knowledge/             ← Knowledge base files (Savio)
-│   ├── design_thinking.json
-│   ├── feature_patterns.json
-│   ├── tech_stack.json
-│   ├── presentation.json
-│   └── sample_problems.json
 ├── test_cases.json        ← Test cases (Aaron)
-├── context.md             ← Original problem statement (reference only)
-├── aaron_tasks.md         ← Aaron's task list
-├── anurodh_tasks.md       ← Anurodh's task list
-└── savio_tasks.md         ← Savio's task list
+└── context.md             ← Original problem statement (reference only)
 ```
 
 ---
 
 ## 4. I/O Contract (LOCKED — Do Not Change Without Team Sync)
 
-This is the API contract between frontend and backend. **Aaron and Savio must agree on this before building.**
+**Source of truth:** `context/02_TECH_STACK.md`
 
 ### Request: `POST /api/mentor`
 
 ```json
 {
-  "problem_statement": "string — the hackathon problem (required)",
-  "team_context": {
-    "team_size": "number (2-5)",
-    "skills": ["string — e.g. 'python', 'react', 'ml']",
-    "time_available": "string — e.g. '90 minutes'",
-    "experience_level": "string — 'beginner' | 'intermediate' | 'advanced'"
-  }
+  "problem_statement": "string, required",
+  "team_context": "string, optional"
 }
 ```
+
+> NOTE: `team_context` is a **plain string** (e.g. "4 people, python + html skills, 90 min, beginners") — NOT a structured object.
 
 ### Response: `POST /api/mentor` → 200 OK
 
 ```json
 {
-  "problem_summary": "string — plain-language summary of the problem",
-  "key_questions": ["string — 3-5 clarifying questions"],
+  "problem_summary": "string",
+  "key_questions": ["string", "string", "string"],
   "user_personas": [
-    {
-      "name": "string",
-      "role": "string",
-      "needs": ["string"],
-      "pain_points": ["string"]
-    }
+    { "name": "string", "need": "string", "pain_point": "string" }
   ],
-  "design_thinking": {
-    "empathize": "string — who are the users and what do they feel?",
-    "define": "string — what is the core problem in one sentence?",
-    "ideate": "string — 2-3 creative approaches",
-    "prototype": "string — what to build first (smallest testable thing)",
-    "test": "string — how to validate with users"
-  },
+  "design_thinking_guidance": "string",
   "feature_suggestions": [
-    {
-      "name": "string",
-      "priority": "P0 | P1 | P2",
-      "effort": "low | medium | high",
-      "description": "string"
-    }
+    { "feature": "string", "why": "string", "effort": "low|medium|high" }
   ],
-  "tech_stack": [
-    {
-      "layer": "string — e.g. 'frontend', 'backend', 'database', 'ai/ml'",
-      "recommendation": "string",
-      "reason": "string"
-    }
-  ],
-  "prototype_priorities": [
-    "string — ordered list: build THIS first, then THIS"
-  ],
-  "validation_checkpoints": [
-    "string — what to verify before demo"
-  ],
-  "demo_prep": {
-    "narrative_arc": ["string — 5-slide outline"],
-    "jury_pitch_checklist": ["string — items to cover in 5-min demo"],
-    "time_allocator": {
-      "problem_overview": "30 sec",
-      "approach_explanation": "1 min",
-      "live_demo": "2 min",
-      "results_and_learning": "1 min",
-      "q_and_a_buffer": "30 sec"
-    }
-  },
-  "action_plan": {
-    "immediate_next_steps": ["string — first 3 things to do RIGHT NOW"],
-    "assumptions": ["string — what we're assuming to be true"],
-    "risks": ["string — what could go wrong"],
-    "innovation_prompts": ["string — creative nudges to think beyond basics"]
-  },
-  "decision_reason_next": {
-    "decision": "string — the recommended approach",
-    "reason": "string — why this approach",
-    "next_action": "string — single most important next step"
-  },
-  "metadata": {
-    "mode": "ai | rule_based_fallback",
-    "model": "string — which model was used",
-    "timestamp": "ISO 8601"
-  }
+  "tech_stack_options": ["string", "string", "string"],
+  "prototype_priorities": ["string", "string", "string"],
+  "validation_checkpoints": ["string", "string"],
+  "demo_prep_tips": ["string", "string", "string"],
+  "decision": "string",
+  "reason": "string",
+  "next_action": "string"
 }
 ```
 
-### Error Response: `POST /api/mentor` → 400/500
+**This exact JSON is what Aaron's UI sends and what Anurodh's renderer consumes. Nobody changes field names without updating `context/02_TECH_STACK.md` and telling the other two.**
+
+### Error Response: 400/500
 
 ```json
 {
@@ -161,7 +113,7 @@ This is the API contract between frontend and backend. **Aaron and Savio must ag
 
 ## 5. System Prompt (Savio — Final Version)
 
-The LLM must act as a **mentor coach**, NOT a solution builder. Core rules:
+The LLM must act as a **mentor coach**, NOT a solution builder.
 
 ```
 You are a Hackathon Mentor AI. Your role is to GUIDE teams, not SOLVE their problems.
@@ -181,190 +133,56 @@ RULES:
 OUTPUT FORMAT: Return valid JSON matching the schema provided.
 ```
 
----
-
-## 6. Knowledge Base Structure (Savio)
-
-Each JSON file in `knowledge/` contains curated templates. The LLM uses these as grounding context — it picks relevant patterns and adapts them, rather than generating from nothing.
-
-### `knowledge/design_thinking.json`
-```json
-{
-  "frameworks": [
-    {
-      "name": "Design Thinking",
-      "steps": ["Empathize", "Define", "Ideate", "Prototype", "Test"],
-      "prompts_per_step": {
-        "Empathize": ["Who experiences this problem most?", "What are their daily frustrations?"],
-        "Define": ["Can you state the problem in one sentence?", "Who is the primary user?"],
-        "Ideate": ["What are 3 different approaches?", "What would the ideal solution look like?"],
-        "Prototype": ["What is the smallest thing you can build to test this?", "What feature gives 80% of value with 20% effort?"],
-        "Test": ["How will you know if this works?", "Who will you test with first?"]
-      }
-    }
-  ],
-  "persona_templates": [...],
-  "problem_reframing_examples": [...]
-}
-```
-
-### `knowledge/feature_patterns.json`
-```json
-{
-  "patterns_by_domain": {
-    "education": ["attendance tracking", "peer learning", "progress dashboards", "automated grading"],
-    "food_wastage": ["demand prediction", "surplus donation matching", "expiry tracking", "portion optimization"],
-    "campus_management": ["parking optimization", "room booking", "event scheduling", "resource sharing"],
-    "health": ["symptom checker", "appointment scheduling", "health tracking", "medication reminders"]
-  },
-  "priority_heuristics": {
-    "P0": "Must work for demo — core value proposition",
-    "P1": "Should work — improves experience significantly",
-    "P2": "Nice to have — differentiator if time permits"
-  }
-}
-```
-
-### `knowledge/tech_stack.json`
-```json
-{
-  "recommendations_by_constraint": {
-    "beginner_90min": {
-      "frontend": "HTML/CSS/JS",
-      "backend": "Python Flask",
-      "ai": "Groq API (free, fast)",
-      "database": "JSON file or none",
-      "why": "Minimal setup, fast to build, easy to demo"
-    },
-    "intermediate_90min": {
-      "frontend": "React or Vue",
-      "backend": "FastAPI or Flask",
-      "ai": "Groq/Claude API",
-      "database": "SQLite",
-      "why": "More structured, still fast"
-    }
-  },
-  "avoid_in_90min": ["Docker", "Kubernetes", "Microservices", "Complex auth", "Custom ML training"]
-}
-```
-
-### `knowledge/presentation.json`
-```json
-{
-  "demo_flow": ["Problem", "Approach", "Solution", "Output", "Proof", "Learning"],
-  "jury_pitch_template": {
-    "opening": "In 1 sentence, what problem does this solve?",
-    "approach": "How did you think about it? (design thinking)",
-    "demo": "Show the working prototype",
-    "proof": "Show test cases passing",
-    "closing": "What did you learn? What would you do differently?"
-  },
-  "common_jury_questions": [
-    "How is this different from existing solutions?",
-    "What are the limitations?",
-    "How would you scale this?",
-    "What was the hardest part?",
-    "How did you validate user needs?"
-  ]
-}
-```
-
-### `knowledge/sample_problems.json`
-```json
-{
-  "problems": [
-    {
-      "id": "food_wastage_001",
-      "title": "Reduce Food Wastage in College Canteen",
-      "description": "College canteens waste 20-40% of prepared food daily. Build a solution to predict demand and reduce waste.",
-      "domains": ["food", "sustainability", "education"],
-      "sample_output_reference": "..."
-    }
-  ]
-}
-```
+**Hard enforcement:** If AI output contains large code blocks beyond trivial snippets, strip or flag them before rendering. This is a system property, not just a prompt instruction. (See `context/03_NOVEL_IDEAS.md` Tier 1 #1)
 
 ---
 
-## 7. Test Cases (Aaron)
+## 6. Knowledge Base (Savio)
 
-Store in `test_cases.json`:
+`knowledge/` directory contains curated templates. The LLM uses these as grounding context — it picks relevant patterns and adapts them, rather than generating from nothing.
 
-```json
-{
-  "test_cases": [
-    {
-      "id": "TC01",
-      "type": "normal",
-      "name": "Food Wastage — Standard",
-      "input": {
-        "problem_statement": "Reduce food wastage in college canteens. Currently 30% of prepared food is thrown away daily.",
-        "team_context": {
-          "team_size": 4,
-          "skills": ["python", "html", "css"],
-          "time_available": "90 minutes",
-          "experience_level": "beginner"
-        }
-      },
-      "expected_output_checks": [
-        "problem_summary is present and < 100 words",
-        "user_personas has at least 2 personas",
-        "feature_suggestions has at least 3 features",
-        "tech_stack recommendations match beginner skill level",
-        "demo_prep.narrative_arc has 5 items",
-        "decision_reason_next has all 3 fields"
-      ]
-    },
-    {
-      "id": "TC02",
-      "type": "alternate",
-      "name": "Parking Problem — Advanced Team",
-      "input": {
-        "problem_statement": "Campus parking is chaotic. Students waste 15 minutes daily finding parking. Design a smart parking solution.",
-        "team_context": {
-          "team_size": 3,
-          "skills": ["react", "node", "ml", "python"],
-          "time_available": "90 minutes",
-          "experience_level": "advanced"
-        }
-      },
-      "expected_output_checks": [
-        "tech_stack includes ML-related recommendation",
-        "feature_suggestions include real-time/sensor features",
-        "prototype_priorities are ordered and realistic for 90 min"
-      ]
-    },
-    {
-      "id": "TC03",
-      "type": "edge",
-      "name": "Vague Problem — Minimal Context",
-      "input": {
-        "problem_statement": "Fix education",
-        "team_context": {
-          "team_size": 2,
-          "skills": [],
-          "time_available": "90 minutes",
-          "experience_level": "beginner"
-        }
-      },
-      "expected_output_checks": [
-        "key_questions asks for clarification on scope",
-        "problem_summary acknowledges ambiguity",
-        "does NOT generate a full solution for an impossibly broad problem",
-        "action_plan.immediate_next_steps includes scoping/narrowing"
-      ]
-    }
-  ]
-}
-```
+Key files:
+- `design_thinking.json` — frameworks, prompts per step, persona templates
+- `feature_patterns.json` — patterns by domain (education, food, campus, health)
+- `tech_stack.json` — recommendations by constraint (beginner/intermediate × time)
+- `presentation.json` — demo flow, jury pitch template, common jury questions
+- `sample_problems.json` — synthetic problem statements for fallback matching
 
 ---
 
-## 8. API Endpoints
+## 7. Fallback Logic (Savio)
+
+**Fallback is mandatory, not optional.** Every API call path must degrade to rule-based fallback on: timeout, rate limit, malformed JSON, or network failure. The demo must never show a raw error or blank screen.
+
+**Timeout:** Set explicit 5-8s timeout on Groq call — fail fast into fallback.
+
+**Flow:**
+1. Match problem statement keywords against `knowledge/sample_problems.json`
+2. If match found → return pre-built structured output for that problem
+3. If no match → return generic template with placeholder summary, default personas, default features, generic tech stack
+
+**The caller never knows which path was used — schema is identical either way.**
+
+---
+
+## 8. Test Cases (Aaron)
+
+Store in `test_cases.json`. 3-5 test cases covering normal, alternate, and edge cases.
+
+Example cases:
+1. **Normal:** Food wastage problem, beginner team, 90 min
+2. **Alternate:** Parking problem, advanced team with ML skills
+3. **Edge:** Vague problem ("Fix education"), minimal context
+
+Expected output checks: problem_summary present, user_personas has 2+, feature_suggestions has 3+, tech_stack matches skill level, decision/reason/next_action all present.
+
+---
+
+## 9. API Endpoints
 
 ### `POST /api/mentor` — Main endpoint
-- Accepts problem statement + team context
-- Returns full structured guidance (see I/O Contract above)
+- Accepts `{ problem_statement, team_context }`
+- Returns full structured guidance (see I/O Contract)
 - Uses Groq API primarily, falls back to rule-based if API fails
 
 ### `GET /api/health` — Health check
@@ -373,48 +191,31 @@ Store in `test_cases.json`:
 ```
 
 ### `GET /api/test-cases` — Load test cases
-Returns the test cases from `test_cases.json` for the testing phase.
+Returns test cases from `test_cases.json` for the testing phase.
 
 ---
 
-## 9. Fallback Logic (Savio)
+## 10. Guardrails (Non-Negotiable)
 
-When Groq API is unavailable (rate limit, network, etc.), use rule-based responses:
+From `context/04_GUARDRAILS.md`:
 
-1. **Match problem statement keywords** against `knowledge/sample_problems.json`
-2. **If match found** → return the pre-built structured output for that problem
-3. **If no match** → return a generic template with:
-   - Placeholder problem summary (filled with input text)
-   - Default personas (Student, Canteen Staff, Admin)
-   - Default feature patterns from the matched domain
-   - Generic tech stack for beginner teams
-   - Standard demo flow template
+### Content
+- Assistant guides, never fully solves — no complete code, no copy-paste architecture
+- No real student data — only synthetic/public examples
+- No confidential competition info
+- No prior team solutions in fallback examples
 
-The fallback must return **valid JSON matching the same schema** as the AI response.
+### Technical
+- Fallback is mandatory on every API path
+- JSON schema is single source of truth — no silent field renames
+- No secrets in code — `GROQ_API_KEY` via env var only
+- Input sanitization: reject empty `problem_statement`, cap at 2000 chars
+- Timeouts on API calls (5-8s)
 
----
-
-## 10. Rules & Constraints
-
-### DO:
-- Keep everything in a single Flask app + single HTML page
-- Use the I/O contract exactly as specified — no field name changes without team sync
-- Store all knowledge base files in `knowledge/` directory
-- Test with the 3 test cases before demo
-- Commit working code to `main` — no branches needed for a 1-hour sprint
-- Use `curl` or the frontend to test endpoints
-
-### DON'T:
-- Install heavy dependencies (no TensorFlow, PyTorch, databases, Docker)
-- Build user auth, databases, or complex state management
-- Use external APIs beyond Groq (no OpenAI, no paid services)
-- Create more than 1 HTML file — single-page app only
-- Change the JSON output schema without notifying the team
-
-### Data Rules:
-- ALL data is synthetic — no real student data
-- Use publicly available examples only
-- Canteen food wastage is the primary example problem
+### Process
+- Freeze schema after 1:55 sync
+- One person owns merge/integration authority during Phase 5 (Anurodh)
+- Don't skip testing to save time
 
 ---
 
@@ -426,77 +227,92 @@ The fallback must return **valid JSON matching the same schema** as the AI respo
 [1:00 - 3:00]  SOLUTION  — LIVE DEMO: Input problem → Get structured guidance
 [3:00 - 3:30]  PROOF     — Run test cases, show pass/fail
 [3:30 - 4:00]  LEARNING  — "What we learned, limitations, future scope"
-[4:00 - 5:00]  Q&A       — Jury questions (see knowledge/presentation.json)
+[4:00 - 5:00]  Q&A       — Jury questions
 ```
 
 **Demo script must be rehearsed.** Anurodh owns the script and timing.
 
 ---
 
-## 12. Sync Points
+## 12. Tasklist & Sync Points
 
-| Time | Who | What |
-|------|-----|------|
-| **1:55** | Aaron ↔ Savio | Lock I/O contract. Confirm field names match. |
-| **2:20** | Savio → Anurodh | Hand off working API. Anurodh starts rendering. |
-| **2:40** | All | Testing complete. Demo script locked. |
-| **2:50** | All | Final rehearsal. |
+From `context/05_TASKLIST.md`:
+
+| Phase | Time | What | Owner |
+|-------|------|------|-------|
+| UNDERSTAND | 1:30-1:40 | Define User → Input → Output → Success | All (Aaron facilitates) |
+| SAMPLE DATA | 1:40-1:55 | Draft test cases, lock JSON contract | Aaron + Savio |
+| **SYNC** | **1:55** | **Confirm contract matches exactly** | **All** |
+| BUILD LOGIC | 1:55-2:20 | System prompt, Groq call, fallback, input form, stub renderer | Savio + Aaron + Anurodh |
+| **SYNC** | **2:20** | **Integration point — swap stubs for live** | **All** |
+| OUTPUT VIEW | 2:20-2:40 | Live response rendering, styling, smoke test | Anurodh + All |
+| TEST & DEMO | 2:40-3:00 | Run test cases, fix critical bugs, script demo | All |
+| REHEARSAL | 2:50-3:00 | Full run-through | All |
 
 ---
 
-## 13. Quick Reference: Who Owns What
+## 13. Who Owns What
 
 | File | Owner | Description |
 |------|-------|-------------|
 | `index.html` | Aaron | Chat UI / input form |
 | `style.css` | Aaron | Styles |
-| `test_cases.json` | Aaron | 3 test cases |
-| `app.py` | Savio | Flask server + LLM logic |
+| `test_cases.json` | Aaron | 3-5 test cases |
+| `app.py` | Savio | Flask server endpoint |
+| `mentor_logic.py` | Savio | Groq API + rule-based fallback |
 | `knowledge/*.json` | Savio | Knowledge base files |
-| `knowledge/` directory | Savio | All knowledge base data |
+| Output renderer | Anurodh | Consumes JSON, renders structured cards |
 | Demo script | Anurodh | 5-min demo flow |
 | Known limitations doc | Anurodh | For jury Q&A |
 
 ---
 
-## 14. Environment Setup
+## 14. Best Practices
+
+From `context/06_BEST_PRACTICES.md`:
+
+1. **Contract-first** — Lock JSON shape before anyone writes code
+2. **Stub, don't wait** — Hardcode sample JSON, build against that, swap for live later
+3. **One shared file** — `context/02_TECH_STACK.md` is THE contract
+4. **Git: main branch only** — small frequent commits, no branches
+5. **Parallel testing** — each person smoke-tests their own layer as they build
+6. **Fail loud, fail fast** — no silent hangs, always fall into fallback
+7. **Communication over docs** — 10-second "hey I changed X" beats any message
+8. **Protect last 10 min** — nothing new after 2:50, rehearsal only
+9. **One integration owner** — Anurodh has final call during Phase 5
+10. **Know what to cut** — cut Tier 2/3 novel ideas if BUILD LOGIC runs long
+
+---
+
+## 15. Novel Ideas (Pick 1-2 If Time Allows)
+
+From `context/03_NOVEL_IDEAS.md`:
+
+**Build if time allows:**
+1. Enforce "guide not solve" with post-processing code-block stripping
+2. Effort vs. impact visual on feature suggestions (2x2 grid)
+3. Confidence/assumption tagging on AI suggestions
+
+**Mention verbally only:**
+- Multi-session memory, mentor calibration, voice interaction
+
+---
+
+## 16. Environment Setup
 
 ```bash
-# Install dependencies (already done or 1 command)
 pip install flask requests
-
-# Run the app
+export GROQ_API_KEY="your_key_here"
 python app.py
-
 # App runs at http://localhost:5000
-
-# Test the API directly
-curl -X POST http://localhost:5000/api/mentor \
-  -H "Content-Type: application/json" \
-  -d '{"problem_statement": "Reduce food wastage in college canteens", "team_context": {"team_size": 4, "skills": ["python", "html"], "time_available": "90 minutes", "experience_level": "beginner"}}'
 ```
 
----
-
-## 15. Decision Log
-
-| Decision | Chosen | Reason |
-|----------|--------|--------|
-| Frontend | Vanilla HTML/CSS/JS | No build step, fastest to demo |
-| Backend | Python Flask | Simple, everyone knows it |
-| LLM | Groq (Llama 3) | Free, fast, no API key hassle |
-| Fallback | Rule-based JSON | Works offline, demo-proof |
-| Database | None (JSON files) | Not needed for prototype |
-| Single page | Yes | Simplicity > features |
-
----
-
-## 16. Git Workflow
-
-- Work on `main` branch — no PRs, no branches, this is a 1-hour sprint
-- Commit often with clear messages: `[Aaron] Added test cases`, `[Savio] Implemented fallback logic`
-- Pull before pushing if someone else pushed: `git pull origin main`
-- If merge conflict, talk to each other — don't fight git
+Test the API:
+```bash
+curl -X POST http://localhost:5000/api/mentor \
+  -H "Content-Type: application/json" \
+  -d '{"problem_statement": "Reduce food wastage in college canteens"}'
+```
 
 ---
 
@@ -510,5 +326,19 @@ If everything breaks in the last 10 minutes:
 
 ---
 
+## 18. Decision Log
+
+| Decision | Chosen | Reason |
+|----------|--------|--------|
+| Frontend | HTML/JS or React (Aaron's call) | Minimal form, don't over-invest |
+| Backend | Flask (Python) | One route, no boilerplate |
+| LLM | Groq `llama-3.3-70b-versatile` | Fast, free, JSON mode |
+| Fallback | Rule-based dict lookup | Zero dependency, demo-proof |
+| Database | None | Stateless, single-session demo |
+| team_context | Plain string | Simple, flexible, no parsing needed |
+
+---
+
 > **Last updated:** Hackathon day — September 2026
+> **Source of truth:** `context/` folder
 > **Maintained by:** Aaron (UI), Savio (Logic), Anurodh (Integration/Demo)
