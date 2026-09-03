@@ -11,6 +11,7 @@ class MentorRenderer {
     this.container = document.getElementById(containerId);
     this.currentData = null;
     this.isJuryMode = false;
+    this.chartInstance = null;
   }
 
   /**
@@ -100,6 +101,9 @@ class MentorRenderer {
           <span class="schema-badge">JSON Schema Verified</span>
         </div>
         <div class="toolbar-actions">
+          <button id="download-pdf-btn" class="btn btn-secondary">
+            📄 Download Report
+          </button>
           <button id="toggle-jury-btn" class="btn ${this.isJuryMode ? 'btn-jury-active' : 'btn-outline'}">
             ${this.isJuryMode ? '👁️ Exit Jury Mode' : '🏆 Enable Jury-Mode (6-Part Pitch View)'}
           </button>
@@ -195,6 +199,12 @@ class MentorRenderer {
                     <p class="feature-why">${this.escape(f.why)}</p>
                   </div>
                 `).join('')}
+                <div style="margin-top: 24px; text-align: center;">
+                  <h4 style="margin-bottom: 12px; color: var(--text-muted); font-size: 0.85rem;">Effort Distribution</h4>
+                  <div style="position: relative; height: 180px; width: 100%;">
+                    <canvas id="effortChart"></canvas>
+                  </div>
+                </div>
               </div>
 
               <!-- Novel Idea #3: Effort vs Impact 2x2 Matrix -->
@@ -375,6 +385,11 @@ class MentorRenderer {
     // Populate matrix after DOM render
     if (this.currentData && this.currentData.feature_suggestions) {
       this.populateEffortMatrix(this.currentData.feature_suggestions);
+      
+      // Render Chart if not in jury mode
+      if (!this.isJuryMode) {
+        this.renderChart(this.currentData.feature_suggestions);
+      }
     }
 
     const toggleBtn = document.getElementById('toggle-jury-btn');
@@ -393,6 +408,74 @@ class MentorRenderer {
         }
       };
     }
+
+    const downloadBtn = document.getElementById('download-pdf-btn');
+    if (downloadBtn) {
+      downloadBtn.onclick = () => {
+        const element = document.getElementById('rendererRoot');
+        const opt = {
+          margin: 10,
+          filename: 'hackathon_mentor_report.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, backgroundColor: document.documentElement.classList.contains('light-mode') ? '#ffffff' : '#090d16' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        
+        const oldText = downloadBtn.innerText;
+        downloadBtn.innerText = "⏳ Generating...";
+        html2pdf().set(opt).from(element).save().then(() => {
+          downloadBtn.innerText = oldText;
+        });
+      };
+    }
+  }
+
+  renderChart(features) {
+    const ctx = document.getElementById('effortChart');
+    if (!ctx) return;
+    
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+    
+    let low = 0, med = 0, high = 0;
+    features.forEach(f => {
+      const e = (f.effort || '').toLowerCase();
+      if (e === 'low') low++;
+      else if (e === 'high') high++;
+      else med++;
+    });
+
+    const isLightMode = document.documentElement.classList.contains('light-mode');
+    const textColor = isLightMode ? '#475569' : '#9ca3af';
+
+    this.chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Low Effort', 'Medium Effort', 'High Effort'],
+        datasets: [{
+          data: [low, med, high],
+          backgroundColor: [
+            'rgba(16, 185, 129, 0.7)',  // low
+            'rgba(245, 158, 11, 0.7)',  // medium
+            'rgba(244, 63, 94, 0.7)'    // high
+          ],
+          borderColor: isLightMode ? '#ffffff' : '#090d16',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: textColor, font: { size: 11, family: 'Outfit' } }
+          }
+        },
+        cutout: '65%'
+      }
+    });
   }
 
   renderError(msg) {
